@@ -1,0 +1,21 @@
+{% extends "profileapp/base.html" %}
+{% load cache %}
+
+{% block title %}
+    Update me
+{% endblock %}
+
+{% block body %}
+    <h1>User info</h1>
+    <h2>Details for {{ user.username }}</h2>
+    <div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Update">
+        </form>
+    </div>
+    <div>
+        <a href={% url 'profileapp:user-details' username=user.username %}>Back to details</a>
+    </div>
+{% endblock %}
