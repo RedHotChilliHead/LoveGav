@@ -1,0 +1,17 @@
+{% extends "profileapp/base.html" %}
+
+{% block title %}
+    Register a pet
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>Register a pet</h1>
+        <br>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Register</button>
+        </form>
+    </div>
+{% endblock %}

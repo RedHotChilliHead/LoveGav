@@ -8,7 +8,8 @@ from django.views.generic import CreateView, UpdateView, DetailView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
-from profileapp.models import Profile
+from profileapp.models import Profile, Pet
+
 
 class RegisterView(CreateView):  # форма регистрации пользователя
     """
@@ -79,12 +80,32 @@ class UserDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs): #добавить объект user в контекст, чтобы он был доступен в шаблоне
         context = super().get_context_data(**kwargs)
         context['user'] = self.object.user #поле user-владельца записи
+        context['pet'] = self.object.user.pet
         return context
 
 class HellowView(View):
+    """
+    Домашняя страница-заглушка
+    """
     def get(self, request:HttpRequest) -> HttpResponse:
         context = {
             "user": self.request.user,
         }
         return render(request, 'profileapp/hello.html', context=context)
+
+class RegisterPetView(CreateView):
+    """
+    Создание странички питомца
+    """
+    model = Pet
+    fields = "name", "sex", "specie", "breed", "color", "birth", "chip", "tatoo", "date_tatoo"
+    template_name = 'profileapp/pet_form.html'
+
+    def form_valid(self, form):  # переопределение метода, чтоб после создания пользователя проходила аутентификация
+        form.instance.owner = self.request.user
+        response = super().form_valid(form)
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("profileapp:user-details", kwargs={'username': self.request.user.username})
 

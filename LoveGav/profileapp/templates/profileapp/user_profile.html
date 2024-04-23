@@ -18,5 +18,15 @@
             <p><img src="{{ profile.avatar.url }}" alt="Avatar" width="300px"></p>
         {% endif %}
         </div>
+        <div>
+            <h3>My pets <a href={% url 'profileapp:register-pet' %}>Add a pet</a></h3>
+            <div>{% if not pet %}
+                <p>There are no pets yet</p>
+            {% else %}
+                {#            <h6><a href={% url 'profileapp:pet-details' petname=pet.name %}>{{ pet.name }}</a></h6>#}
+                <h4>{{ pet.name }}</h4>
+            {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
