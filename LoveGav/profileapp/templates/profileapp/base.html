@@ -74,16 +74,21 @@
     </style>
 </head>
 <body>
+{% load static %}
 <div class="fixed-container">
     <div class="nav">
         <section>
             <div class="home">
-                <a href={% url 'profileapp:hello' %}>Навигация-заглушка</a>
+                <a href={% url 'profileapp:hello' %}><img src="{% static 'dog-logo.png' %}" alt="logo" width="100px"
+                                                          class="login-page__logo"></a>
+                <a href={% url 'profileapp:hello' %}><img src="{% static 'Lovegav.png' %}" alt="logo" width="200px"
+                                                          class="login-page__logo"></a>
             </div>
         </section>
         <section>
             {% if user.is_authenticated %}
-                <h2>Hello, <a href={% url 'profileapp:user-details' username=user.username %}>{{ user.username }}</a></h2>
+                <h2>Hello, <a href={% url 'profileapp:user-details' username=user.username %}>{{ user.username }}</a>
+                </h2>
                 <div>
                     <a href={% url 'profileapp:update-me' username=user.username %}>Edit a profile</a>
 
