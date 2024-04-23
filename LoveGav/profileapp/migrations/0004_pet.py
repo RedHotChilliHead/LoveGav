@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('chip', models.BooleanField(blank=True, null=True)),
                 ('tatoo', models.TextField(blank=True, max_length=20)),
                 ('date_tatoo', models.DateField(blank=True, null=True)),
-                ('passport', models.FileField(null=True, upload_to=profileapp.models.pet_passport_path)),
+                ('passport', models.FileField(null=True, upload_to=profileapp.models.pet_files_path)),
                 ('owner', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

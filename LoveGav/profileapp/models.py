@@ -9,7 +9,7 @@ def profile_avatar_directory_path(instance: "Profile", filename: str) -> str: #i
         filename=filename,
     )
 
-def pet_passport_path(instance: "Pet", filename: str) -> str:
+def pet_files_path(instance: "Pet", filename: str) -> str:
     return 'users/user{pk}/pet_files/{filename}'.format(
         pk=instance.owner.pk,
         filename=filename,
@@ -27,7 +27,7 @@ class Pet(models.Model):
         'F': "Famale",
     }
 
-    owner = OneToOneField(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=150, blank=False)
     sex = models.CharField(
         max_length=1,
@@ -40,5 +40,6 @@ class Pet(models.Model):
     chip = models.BooleanField(blank=True, null=True)
     tatoo = models.TextField(max_length=20, blank=True)
     date_tatoo = models.DateField(blank=True, null=True)
-    passport = models.FileField(null=True, upload_to=pet_passport_path)
+    passport = models.FileField(null=True, upload_to=pet_files_path)
+    avatar = models.ImageField(null=True, upload_to=pet_files_path)
 

@@ -1,0 +1,50 @@
+{% extends "profileapp/base.html" %}
+
+{% block title %}
+    {{ pet.name }}`s data
+{% endblock %}
+{% block body %}
+    {% load static %}
+    <div class="fixed-container">
+        <h1>{{ pet.name }}`s data</h1>
+        <br>
+        <p>Owner: {{ pet.owner }}</p>
+        <p>Sex: {{ pet.sex }}</p>
+
+        {% if pet.specie %}
+            <p>Specie: {{ pet.specie }}</p>
+        {% endif %}
+
+        {% if pet.breed %}
+            <p>Breed: {{ pet.breed }}</p>
+        {% endif %}
+
+        {% if pet.birth %}
+            <p>Date of birth: {{ pet.birth }}</p>
+        {% endif %}
+
+        {% if pet.chip %}
+            <p>Chip: {{ pet.chip }}</p>
+        {% endif %}
+
+        {% if pet.tatoo %}
+            <p>Tatoo: {{ pet.tatoo }}</p>
+        {% endif %}
+
+        {% if pet.date_tatoo %}
+            <p>Date of tatoo: {{ pet.date_tatoo }}</p>
+        {% endif %}
+
+        {% if pet.passport %}
+            <p>Passport: {{ pet.passport }}</p>
+        {% endif %}
+
+        <div>{% if not pet.avatar %}
+            <p>The photo has not been uploaded yet</p>
+        {% else %}
+            <p><img src="{{ pet.avatar.url }}" alt="Avatar" width="300px"></p>
+        {% endif %}
+        </div>
+        <span><a href={% url 'profileapp:update-pet' username=user.username pk=pet.id %}>Update pet`s info</a></span>
+    </div>
+{% endblock %}

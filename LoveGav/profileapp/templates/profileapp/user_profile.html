@@ -4,6 +4,7 @@
     Personal data
 {% endblock %}
 {% block body %}
+    {% load static %}
     <div class="fixed-container">
         <h1>Personal data</h1>
         <br>
@@ -19,12 +20,20 @@
         {% endif %}
         </div>
         <div>
-            <h3>My pets <a href={% url 'profileapp:register-pet' %}>Add a pet</a></h3>
-            <div>{% if not pet %}
+            <h3>My pets <a href={% url 'profileapp:register-pet' username=user.username %}>add a pet</a></h3>
+            <div>{% if not pets %}
                 <p>There are no pets yet</p>
             {% else %}
-                {#            <h6><a href={% url 'profileapp:pet-details' petname=pet.name %}>{{ pet.name }}</a></h6>#}
-                <h4>{{ pet.name }}</h4>
+                {% for pet in pets %}
+                    <li>
+                        {% if not pet.avatar %}
+                            <img src="{% static 'dog-logo.png' %}" alt="logo" width="50px">
+                        {% else %}
+                            <img src="{{ pet.avatar.url }}" alt="pet-avatar" width="50px">
+                        {% endif %}
+                        <span><a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}>{{ pet.name }}</a></span>
+                    </li>
+                {% endfor %}
             {% endif %}
             </div>
         </div>

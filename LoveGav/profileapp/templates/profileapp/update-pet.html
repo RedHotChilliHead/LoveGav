@@ -1,0 +1,24 @@
+{% extends "profileapp/base.html" %}
+{% load cache %}
+
+{% block title %}
+    Update pet
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>Edit pet data</h1>
+        <h2>Pet {{ pet.name }}</h2>
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+        </div>
+        <br>
+        <div>
+            <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id%}>Back to details</a>
+        </div>
+    </div>
+{% endblock %}
