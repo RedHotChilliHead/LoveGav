@@ -1,23 +1,22 @@
 {% extends "profileapp/base.html" %}
 
 {% block title %}
-    User # {{ user.pk }} details
+    Personal data
 {% endblock %}
 {% block body %}
-    <h1> User # {{ user.pk }}: </h1>
-    <h2>Detail</h2>
-    <p>Username: {{ user.username }}</p>
-    <p>Date of birth: {{ user.profile.birth }}</p>
-    <p>Email: {{ user.profile.email }}</p>
-    <p>Bio: {{ user.profile.bio }}</p><br>
-    <p>Avatar:</p>
-    <div>{% if not profile.avatar %}
-        <p>The photo has not been uploaded yet</p>
-    {% else %}
-        <p><img src="{{ profile.avatar.url }}" alt="Avatar" width="300px"></p>
-    {% endif %}
-        <div>
-            <a href={% url 'profileapp:update-me' username=user.username %}>Edit a profile</a>
+    <div class="fixed-container">
+        <h1>Personal data</h1>
+        <br>
+        <p>Username: {{ user.username }}</p>
+        <p>Date of birth: {{ user.profile.birth }}</p>
+        <p>Email: {{ user.profile.email }}</p>
+        <p>Bio: {{ user.profile.bio }}</p><br>
+        <p>Avatar:</p>
+        <div>{% if not profile.avatar %}
+            <p>The photo has not been uploaded yet</p>
+        {% else %}
+            <p><img src="{{ profile.avatar.url }}" alt="Avatar" width="300px"></p>
+        {% endif %}
         </div>
     </div>
 {% endblock %}

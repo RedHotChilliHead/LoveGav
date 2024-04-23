@@ -5,20 +5,22 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Navigation for {{ user.username }}</h1>
-    <div>
-        <a href={% url 'profileapp:register' %}>Register</a>
-    </div>
-    <div>
-        <a href={% url 'profileapp:login' %}>Login</a>
-    </div>
-    <div>
-        <a href={% url 'profileapp:logout' %}>Logout</a>
-    </div>
-    <div>
-        <a href={% url 'profileapp:update-me' username=user.username %}>Update-me</a>
-    </div>
-    <div>
-        <a href={% url 'profileapp:user-details' username=user.username %}>User-details</a>
+    <div class="fixed-container">
+        <h1>Navigation for {{ user.username }}</h1>
+        <div>
+            <a href={% url 'profileapp:register' %}>Register</a>
+        </div>
+        <div>
+            <a href={% url 'profileapp:login' %}>Login</a>
+        </div>
+        <div>
+            <a href={% url 'profileapp:logout' %}>Logout</a>
+        </div>
+        <div>
+            <a href={% url 'profileapp:update-me' username=user.username %}>Update-me</a>
+        </div>
+        <div>
+            <a href={% url 'profileapp:user-details' username=user.username %}>User-details</a>
+        </div>
     </div>
 {% endblock %}

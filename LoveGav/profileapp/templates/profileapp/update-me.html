@@ -6,16 +6,19 @@
 {% endblock %}
 
 {% block body %}
-    <h1>User info</h1>
-    <h2>Details for {{ user.username }}</h2>
-    <div>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Update">
-        </form>
-    </div>
-    <div>
-        <a href={% url 'profileapp:user-details' username=user.username %}>Back to details</a>
+    <div class="fixed-container">
+        <h1>Edit personal data</h1>
+        <h2>User {{ user.username }}</h2>
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+        </div>
+        <br>
+        <div>
+            <a href={% url 'profileapp:user-details' username=user.username %}>Back to details</a>
+        </div>
     </div>
 {% endblock %}
