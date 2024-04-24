@@ -38,6 +38,10 @@
             <p>Date of tatoo: {{ pet.date_tatoo }}</p>
         {% endif %}
 
+        {% if pet.weight %}
+            <p>Weight: {{ pet.weight }} (kg)</p>
+        {% endif %}
+
         {% if pet.passport %}
             <p>Passport: {{ pet.passport }}</p>
         {% endif %}
@@ -48,6 +52,6 @@
             <p><img src="{{ pet.avatar.url }}" alt="Avatar" width="300px"></p>
         {% endif %}
         </div>
-    <a href={% url 'profileapp:user-details' username=user.username %}>Back to an owner profile</a>
+        <a href={% url 'profileapp:user-details' username=user.username %}>Back to an owner profile</a>
     </div>
 {% endblock %}

@@ -142,7 +142,7 @@ class RegisterPetView(UserPassesTestMixin, CreateView):
             return False
 
     model = Pet
-    fields = "name", "sex", "specie", "breed", "color", "birth", "chip", "tatoo", "date_tatoo"
+    fields = "name", "sex", "specie", "breed", "color", "birth", "chip", "tatoo", "date_tatoo", "weight"
     template_name = 'profileapp/pet_form.html'
 
     def form_valid(self, form):  # переопределение метода, чтоб после создания пользователя проходила аутентификация
@@ -188,7 +188,7 @@ class UpdatePetView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
             return False
 
     model = Pet
-    fields = "specie", "breed", "color", "birth", "chip", "tatoo", "date_tatoo", "passport", "avatar"
+    fields = "specie", "breed", "color", "birth", "chip", "tatoo", "date_tatoo", "passport", "avatar", "weight"
     template_name = 'profileapp/update-pet.html'
 
     def get_success_url(self):

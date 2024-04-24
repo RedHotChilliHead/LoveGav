@@ -42,4 +42,5 @@ class Pet(models.Model):
     date_tatoo = models.DateField(blank=True, null=True)
     passport = models.FileField(null=True, upload_to=pet_files_path)
     avatar = models.ImageField(null=True, upload_to=pet_files_path)
+    weight = models.FloatField(blank=True, null=True)
 
