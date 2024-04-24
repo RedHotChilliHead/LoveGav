@@ -18,6 +18,9 @@
         </div>
         <br>
         <div>
+            <a href={% url 'profileapp:delete-me' username=user.username pk=user.id %}>Delete my profile</a>
+        </div>
+        <div>
             <a href={% url 'profileapp:user-details' username=user.username %}>Back to details</a>
         </div>
     </div>

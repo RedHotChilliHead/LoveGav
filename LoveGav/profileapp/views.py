@@ -18,8 +18,6 @@ class RegisterView(CreateView):  # форма регистрации польз�
     form_class = UserCreationForm  # создать пользователя такого типа
     template_name = 'profileapp/register.html'  # указание шаблона
 
-    # success_url = reverse_lazy("profileapp:user-details", kwargs={'username': })  # редирект на инфу о пользователе
-
     def form_valid(self, form):  # переопределение метода, чтоб после создания пользователя проходила аутентификация
         response = super().form_valid(form)  # подготовка ответа, пользователь сохранен, публикация формы
         Profile.objects.create(user=self.object)  # добавление пользователю профиль
@@ -33,10 +31,18 @@ class RegisterView(CreateView):  # форма регистрации польз�
     def get_success_url(self):
         return reverse_lazy("profileapp:user-details", kwargs={'username': self.request.user.username})
 
+class DeleteUserView(DeleteView):
+    """
+    Удалить профиль владельца
+    """
+    model = User
+    success_url = ("profileapp:hello")
+    template_name = "profileapp/user_confirm_delete.html"
+
 
 def logout_view(request: HttpRequest):
     """
-    Выход из аккаунта
+    Выход из аккаунта владельца
     """
     logout(request)
     return redirect(reverse("profileapp:login"))  # revers работает только внутри view функций
@@ -44,7 +50,7 @@ def logout_view(request: HttpRequest):
 
 class UpdateMeView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
-    Редактировать профиль
+    Редактировать профиль владельца
     """
 
     def test_func(self):
@@ -72,7 +78,7 @@ class UpdateMeView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 
 class UserDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     """
-    Просмотр профиля
+    Просмотр профиля владельца
     """
 
     def test_func(self):
