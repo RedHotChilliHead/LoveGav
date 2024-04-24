@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 from .views import HellowView
 from .views import RegisterView, logout_view, UpdateMeView, UserDetaislView, DeleteUserView
 from .views import RegisterPetView, PetDetaislView, UpdatePetView, DeletePetView
+from .views import СalorieСalculatorView
 
 app_name = "profileapp"
 
@@ -24,4 +25,6 @@ urlpatterns = [
     path('<str:username>/<int:pk>/', PetDetaislView.as_view(), name='pet-details'),
     path('<str:username>/<int:pk>/update/', UpdatePetView.as_view(), name='update-pet'),
     path('<str:username>/<int:pk>/delete/', DeletePetView.as_view(), name='delete-pet'),
+
+    path('<str:username>/calculator/', СalorieСalculatorView.as_view(), name='calculator'),
 ]

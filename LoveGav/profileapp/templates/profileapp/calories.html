@@ -1,0 +1,26 @@
+{% extends "profileapp/base.html" %}
+
+{% block title %}
+    Calorie calculator
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>Calorie calculator</h1>
+        <div>
+            <p>Username: {{ user.username }}</p>
+            <p>Pets:
+                {% for pet in pets %}
+                    Name pet: {{ pet.name }}
+                {% endfor %}
+            </p>
+        </div>
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Calculate</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

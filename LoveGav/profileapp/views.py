@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
 from profileapp.models import Profile, Pet
+from .forms import Calculator
 
 
 class RegisterView(CreateView):  # форма регистрации пользователя
@@ -212,3 +213,22 @@ class DeletePetView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.kwargs['pk']})
     # шаблон должен быть обязательно pet_confirm_delete (модель_confirm_delete)
+
+class СalorieСalculatorView(View):
+    """
+    Калькулятор каллорий
+    """
+
+    def get(self, request, *args, **kwargs):
+        form = Calculator()
+        arg_username = self.kwargs['username']
+        context = {
+            "pets": Pet.objects.filter(owner__username=arg_username),
+            "user": User.objects.get(username=arg_username),
+            "form": form,
+        }
+        return render(request, 'profileapp/calories.html', context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = Calculator(request.POST)
+        return render(request, 'profileapp/hello.html')

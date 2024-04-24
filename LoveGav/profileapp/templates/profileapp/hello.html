@@ -22,5 +22,8 @@
         <div>
             <a href={% url 'profileapp:user-details' username=user.username %}>User-details</a>
         </div>
+    <div>
+            <a href={% url 'profileapp:calculator' username=user.username %}>Calorie calculator</a>
+        </div>
     </div>
 {% endblock %}
