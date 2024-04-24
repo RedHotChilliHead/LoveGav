@@ -7,8 +7,7 @@
 
 {% block body %}
     <div class="fixed-container">
-        <h1>Edit pet data</h1>
-        <h2>Pet {{ pet.name }}</h2>
+        <h1>Edit {{ pet.name }}`s data</h1>
         <div>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -18,9 +17,7 @@
         </div>
         <br>
         <div>
-            <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}>Back to details</a>
-        </div>
-        <div>
+            <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}>Back to details</a><br><br>
             <a href={% url 'profileapp:delete-pet' username=user.username pk=pet.id %}>Delete a pet's profile</a>
         </div>
     </div>

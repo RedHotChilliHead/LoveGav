@@ -16,26 +16,6 @@
             margin-right: auto;
         }
 
-        .container-offset {
-            margin-left: 150px;
-        }
-
-        .examples {
-            display: flex;
-            justify-content: left;
-            align-items: flex-start;
-        }
-
-        .examples > div {
-            width: 420px;
-        }
-
-        .examples img {
-            height: 160px;
-            margin-left: 15px;
-            border: 1px solid lightgrey;
-        }
-
         .home {
             padding-right: 300px;
             font-size: 180%;
@@ -48,6 +28,16 @@
             align-items: center;
         }
 
+        .foot {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+        }
+        .foot > span {
+            margin-right: 50px;
+        }
+
         .section-main {
             margin: 10px 0;
             display: flex;
@@ -55,9 +45,6 @@
             align-items: flex-start;
         }
 
-        .links {
-            margin-left: 30px;
-        }
     </style>
 </head>
 <body>
@@ -77,8 +64,6 @@
                 <h2>Hello, <a href={% url 'profileapp:user-details' username=user.username %}>{{ user.username }}</a>
                 </h2>
                 <div>
-                    <a href={% url 'profileapp:update-me' username=user.username %}>Edit a profile</a>
-
                     <a href={% url 'profileapp:logout' %}>Logout</a><br>
                 </div>
             {% else %}
@@ -96,6 +81,16 @@
 {% endblock %}
 
 {% block footer %}
+    <footer>
+        <div class="fixed-container">
+            <div class="foot">
+                <span><img src="{% static 'vk.png' %}" alt="logo" width="40px">VK</span>
+                <span><img src="{% static 'mail.png' %}" alt="logo" width="40px">MAIL</span>
+                <span><img src="{% static 'youtube.png' %}" alt="logo" width="40px">YOUTUBE</span>
+            </div>
+            <div class="foot" style="color: grey">Copyright @ 2024</div>
+        </div>
+    </footer>
 {% endblock %}
 
 </body>

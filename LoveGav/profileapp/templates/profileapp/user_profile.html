@@ -8,7 +8,9 @@
     <div class="fixed-container">
         <div class="section-main">
             <section>
-                <h1>Personal data</h1>
+                <h1>Personal data<a style="margin-left: 10px"
+                                    href={% url 'profileapp:update-me' username=user.username %}><img
+                        src="{% static 'edit.png' %}" alt="edit user info" width="40px"></a></h1>
                 <br>
                 <p>Username: {{ user.username }}</p>
                 <p>Date of birth: {{ user.profile.birth }}</p>
@@ -16,37 +18,39 @@
                 <p>Bio: {{ user.profile.bio }}</p>
             </section>
             <section>
+                <br>
                 <div>{% if not profile.avatar %}
                     <p>The photo has not been uploaded yet</p>
                 {% else %}
-                    <p><img src="{{ profile.avatar.url }}" alt="Avatar" width="300px"></p>
+                    <p><img src="{{ profile.avatar.url }}" alt="Avatar" height="250px"></p>
                 {% endif %}
                 </div>
             </section>
-            <section>
-                <div>
-                    <h2>My pets <a href={% url 'profileapp:register-pet' username=user.username %}><img
-                            src="{% static 'plus.png' %}" alt="add pet" width="40px"></a>
-                    </h2>
-                    <div>{% if not pets %}
-                        <p>There are no pets yet</p>
-                    {% else %}
-                        {% for pet in pets %}
-                            <li>
+        </div>
+        <div>
+            <h2>My pets <a href={% url 'profileapp:register-pet' username=user.username %}><img
+                    src="{% static 'plus.png' %}" alt="add pet" width="40px"></a>
+            </h2>
+            <div>{% if not pets %}
+                <p>There are no pets yet</p>
+            {% else %}
+                {% for pet in pets %}
+                    <li>
                             <span style="font-size: larger">
-                                <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}>{{ pet.name }}</a></span>
-                                {% if not pet.avatar %}
-                                    <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}><img src="{% static 'dog-logo.png' %}" alt="logo" width="50px"></a>
-                                {% else %}
-                                    <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}><img style="border-radius: 20px" src="{{ pet.avatar.url }}" alt="pet-avatar" width="100px"></a>
-                                {% endif %}
-
-                            </li>
-                        {% endfor %}
-                    {% endif %}
-                    </div>
-                </div>
-            </section>
+                                <a style="margin-right: 10px"
+                                   href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}>{{ pet.name }}</a></span>
+                        {% if not pet.avatar %}
+                            <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}><img
+                                    src="{% static 'dog-logo.png' %}" alt="logo" width="50px"></a>
+                        {% else %}
+                            <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}><img
+                                    style="border-radius: 20px" src="{{ pet.avatar.url }}" alt="pet-avatar"
+                                    width="100px"></a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

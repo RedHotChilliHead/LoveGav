@@ -31,10 +31,20 @@ class RegisterView(CreateView):  # форма регистрации польз�
     def get_success_url(self):
         return reverse_lazy("profileapp:user-details", kwargs={'username': self.request.user.username})
 
-class DeleteUserView(DeleteView):
+class DeleteUserView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
     Удалить профиль владельца
     """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff:
+            return True
+        elif self.request.user.pk == owner.id:
+            return True
+        else:
+            return False
+
     model = User
     success_url = ("profileapp:hello")
     template_name = "profileapp/user_confirm_delete.html"
@@ -184,10 +194,20 @@ class UpdatePetView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.kwargs['pk']})
 
-class DeletePetView(DeleteView):
+class DeletePetView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
     Удалить профиль питомца
     """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff:
+            return True
+        elif self.request.user.pk == owner.id:
+            return True
+        else:
+            return False
+
     model = Pet
     def get_success_url(self):
         return reverse("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.kwargs['pk']})
