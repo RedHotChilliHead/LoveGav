@@ -1,12 +1,15 @@
 {% extends "profileapp/base.html" %}
 
 {% block title %}
+    {% load static %}
     {{ pet.name }}`s data
 {% endblock %}
 {% block body %}
     {% load static %}
     <div class="fixed-container">
-        <h1>{{ pet.name }}`s data</h1>
+        <h1>{{ pet.name }}`s data<a style="margin-left: 10px"
+                                    href={% url 'profileapp:update-pet' username=user.username pk=pet.id %}><img
+                src="{% static 'edit.png' %}" alt="edit pet info" width="40px"></a></h1>
         <br>
         <p>Owner: {{ pet.owner }}</p>
         <p>Sex: {{ pet.sex }}</p>
@@ -45,6 +48,6 @@
             <p><img src="{{ pet.avatar.url }}" alt="Avatar" width="300px"></p>
         {% endif %}
         </div>
-        <span><a href={% url 'profileapp:update-pet' username=user.username pk=pet.id %}>Update pet`s info</a></span>
+    <a href={% url 'profileapp:user-details' username=user.username %}>Back to an owner profile</a>
     </div>
 {% endblock %}

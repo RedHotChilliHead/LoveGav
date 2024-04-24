@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import CreateView, UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
@@ -177,3 +177,12 @@ class UpdatePetView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.kwargs['pk']})
+
+class DeletePetView(DeleteView):
+    """
+    Удалить профиль питомца
+    """
+    model = Pet
+    def get_success_url(self):
+        return reverse("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.kwargs['pk']})
+    # шаблон должен быть обязательно pet_confirm_delete (модель_confirm_delete)

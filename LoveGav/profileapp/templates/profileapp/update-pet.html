@@ -18,7 +18,10 @@
         </div>
         <br>
         <div>
-            <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id%}>Back to details</a>
+            <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}>Back to details</a>
+        </div>
+        <div>
+            <a href={% url 'profileapp:delete-pet' username=user.username pk=pet.id %}>Delete a pet's profile</a>
         </div>
     </div>
 {% endblock %}
