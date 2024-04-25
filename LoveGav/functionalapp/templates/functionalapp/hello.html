@@ -1,4 +1,4 @@
-{% extends "profileapp/base.html" %}
+{% extends "functionalapp/base.html" %}
 
 {% block title %}
     Hello-page
@@ -23,7 +23,7 @@
             <a href={% url 'profileapp:user-details' username=user.username %}>User-details</a>
         </div>
     <div>
-            <a href={% url 'profileapp:calculator' username=user.username %}>Calorie calculator</a>
+            <a href={% url 'functionalapp:calculator' username=user.username %}>Calorie calculator</a>
         </div>
     </div>
 {% endblock %}

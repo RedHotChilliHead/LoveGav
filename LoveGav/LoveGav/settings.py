@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'profileapp.apps.ProfileappConfig',
-    # 'geeks',
+    'functionalapp.apps.FunctionalappConfig',
 ]
 
 MIDDLEWARE = [
@@ -130,5 +130,5 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = reverse_lazy("profileapp:hello")  # Перейти после аутентификации
+LOGIN_REDIRECT_URL = reverse_lazy("functionalapp:hello")  # Перейти после аутентификации
 LOGIN_URL = reverse_lazy("profileapp:login")  # перейти для аутентификации

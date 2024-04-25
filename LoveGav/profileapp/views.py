@@ -1,15 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpRequest
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views import View
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
 from profileapp.models import Profile, Pet
-from .forms import Calculator
 
 
 class RegisterView(CreateView):  # форма регистрации пользователя
@@ -116,19 +114,6 @@ class UserDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
         context['pets'] = self.object.user.pet_set.all()
         return context
 
-
-class HellowView(View):
-    """
-    Домашняя страница-заглушка
-    """
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        context = {
-            "user": self.request.user,
-        }
-        return render(request, 'profileapp/hello.html', context=context)
-
-
 class RegisterPetView(UserPassesTestMixin, CreateView):
     """
     Создание странички питомца
@@ -212,60 +197,7 @@ class DeletePetView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
             return False
 
     model = Pet
+    template_name = "profileapp/pet_confirm_delete.html"
 
     def get_success_url(self):
         return reverse("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.kwargs['pk']})
-    # шаблон должен быть обязательно pet_confirm_delete (модель_confirm_delete)
-
-
-class СalorieСalculatorView(View):
-    """
-    Калькулятор каллорий
-    """
-
-    def get(self, request, *args, **kwargs):
-        form = Calculator()
-        arg_username = self.kwargs['username']
-        context = {
-            "pets": Pet.objects.filter(owner__username=arg_username),
-            "user": User.objects.get(username=arg_username),
-            "form": form,
-        }
-        return render(request, 'profileapp/calories.html', context=context)
-
-    def post(self, request, *args, **kwargs):
-        form = Calculator(request.POST)
-        arg_username = self.kwargs['username']
-        context = {
-            "pets": Pet.objects.filter(owner__username=arg_username),
-            "user": User.objects.get(username=arg_username),
-            "form": form,
-        }
-        if form.is_valid():
-            weight = form.cleaned_data['weight']
-            if weight < 2:
-                result = 2 * (70 * weight ** 0.75)
-            else:
-                result = 2 * (30 * weight + 70)
-            kkk = [form.cleaned_data['k' + str(i)] for i in range(1, 11)]
-            kkk_dict = {'k1': 1.2,
-                        'k2': 3,
-                        'k3': 0.8,
-                        'k4': 2.4,
-                        'k5': 2,
-                        'k6': 1.6,
-                        'k7': 1.2,
-                        'k8': 1.6,
-                        'k9': 1.6,
-                        'k10': 1.2}
-            count = 1
-            for k in kkk:
-                if k == True:
-                    result *= kkk_dict['k'+str(count)]
-                count += 1
-            context['calories_per_day'] = result
-            if form.cleaned_data['calorie_content']:
-                calorie_content = form.cleaned_data['calorie_content']
-                one_calorie = 1000/calorie_content
-                context['grams'] = result * one_calorie
-        return render(request, 'profileapp/calories.html', context=context)
