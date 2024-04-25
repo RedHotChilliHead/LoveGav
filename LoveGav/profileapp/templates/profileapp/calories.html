@@ -6,21 +6,35 @@
 
 {% block body %}
     <div class="fixed-container">
-        <h1>Calorie calculator</h1>
-        <div>
-            <p>Username: {{ user.username }}</p>
-            <p>Pets:
-                {% for pet in pets %}
-                    Name pet: {{ pet.name }}
-                {% endfor %}
-            </p>
+        <div class="section-main">
+            <section>
+                <h1>Calorie calculator</h1>
+                <div>
+                    <p>Username: {{ user.username }}</p>
+                    <p>Pets:
+                        {% for pet in pets %}
+                            Name pet: {{ pet.name }}
+                        {% endfor %}
+                    </p>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success">Calculate</button>
+                </form>
+            </section>
+            <section>
+                {% if calories_per_day %}
+                    <h2>Number of calories per day: {{ calories_per_day }}</h2>
+                    {% if grams %}
+                        <h2>Grams of dry food per day: {{ grams }}</h2>
+                    {% endif %}
+                    <p>Finally, let's remind you about the optimal dog nutrition schedule.<br>
+                        As a rule, the daily diet is divided into two parts, but healthy adult dogs can be fed once a day.<br>
+                        Puppies should eat three times a day or more often.</p>
+                {% endif %}
+            </section>
         </div>
-        <div>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-success">Calculate</button>
-            </form>
-        </div>
+    </div>
     </div>
 {% endblock %}
