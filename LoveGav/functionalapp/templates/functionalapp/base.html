@@ -34,6 +34,7 @@
             justify-content: center;
             align-items: baseline;
         }
+
         .foot > span {
             margin-right: 50px;
         }
@@ -45,6 +46,13 @@
             align-items: flex-start;
         }
 
+        .links {
+            text-decoration: none;
+            color: black;
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -54,9 +62,11 @@
         <section>
             <div class="home">
                 <a href={% url 'functionalapp:hello' %}><img src="{% static 'dog-logo.png' %}" alt="logo" width="100px"
-                                                          class="login-page__logo"></a>
+                                                             class="login-page__logo"></a>
                 <a href={% url 'functionalapp:hello' %}><img src="{% static 'Lovegav.png' %}" alt="logo" width="200px"
-                                                          class="login-page__logo"></a>
+                                                             class="login-page__logo"></a>
+                <a class="links" href={% url 'functionalapp:calculator' username=user.username %}>Calculator</a>
+                <a class="links" href={% url 'functionalapp:playground-list' %}>Playgrounds</a>
             </div>
         </section>
         <section>

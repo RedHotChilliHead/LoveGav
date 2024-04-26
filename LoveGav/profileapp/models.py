@@ -43,4 +43,6 @@ class Pet(models.Model):
     passport = models.FileField(null=True, upload_to=pet_files_path)
     avatar = models.ImageField(null=True, upload_to=pet_files_path)
     weight = models.FloatField(blank=True, null=True)
+    def __str__(self) -> str:
+        return f"({self.name})"
 

@@ -1,8 +1,11 @@
 from django.shortcuts import render
+from django.views.generic import ListView
+
 from profileapp.forms import Calculator
 from django.views import View
 from django.contrib.auth.models import User
 from profileapp.models import Pet
+from functionalapp.models import Playground
 from django.http import HttpRequest, HttpResponse
 
 class HelloView(View):
@@ -67,3 +70,8 @@ class СalorieСalculatorView(View):
                 one_calorie = 1000/calorie_content
                 context['grams'] = result * one_calorie
         return render(request, 'functionalapp/calories.html', context=context)
+
+class DogPlaygroundsView(ListView):
+    model = Playground
+    template_name = "functionalapp/playgrounds.html"
+    paginate_by = 100

@@ -10,12 +10,11 @@
             <section>
                 <h1>Calorie calculator</h1>
                 <div>
-                    <p>Username: {{ user.username }}</p>
-                    <p>Pets:
+                    <p><b>The weight of your pets:
                         {% for pet in pets %}
-                            Name pet: {{ pet.name }}
+                            <li>{{ pet.name }} - {{ pet.weight }} kg</li>
                         {% endfor %}
-                    </p>
+                    </b></p>
                 </div>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
