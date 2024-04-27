@@ -1,0 +1,24 @@
+{% extends "functionalapp/base.html" %}
+{% load cache %}
+
+{% block title %}
+    Update the question
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>Update the question</h1>
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+        </div>
+        <br>
+        <div>
+            <a href={% url 'functionalapp:question-details' pk=object.pk %}>Back to my question</a><br><br>
+            <a href={% url 'functionalapp:question-delete' pk=object.pk %}>Delete my question</a>
+        </div>
+    </div>
+{% endblock %}

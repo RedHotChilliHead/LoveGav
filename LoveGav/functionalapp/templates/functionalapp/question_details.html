@@ -1,0 +1,22 @@
+{% extends "functionalapp/base.html" %}
+
+{% block title %}
+    Question
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>{{ object.head }}</h1>
+        <p>Author: {{ object.author }}</p>
+        <p>{{ object.body }}</p>
+        {% if object.photo %}
+            <p><img src="{{ object.photo.url }}" alt="photo" width="300px"></p>
+        {% endif %}
+        <p>{{ object.data }}</p>
+        <br>
+        {% if permission %}
+            <a href={% url 'functionalapp:question-update' pk=object.pk %}>Update the question</a>
+        {% endif %}
+        <a href={% url 'functionalapp:question-list' %}>Back to other questions</a>
+    </div>
+{% endblock %}

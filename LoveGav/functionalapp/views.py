@@ -1,12 +1,15 @@
-from django.shortcuts import render
-from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
 from profileapp.forms import Calculator
 from django.views import View
 from django.contrib.auth.models import User
 from profileapp.models import Pet
-from functionalapp.models import Playground
+from functionalapp.models import Playground, Question
 from django.http import HttpRequest, HttpResponse
+
 
 class HelloView(View):
     """
@@ -18,6 +21,7 @@ class HelloView(View):
             "user": self.request.user,
         }
         return render(request, 'functionalapp/hello.html', context=context)
+
 
 class СalorieСalculatorView(View):
     """
@@ -62,16 +66,99 @@ class СalorieСalculatorView(View):
             count = 1
             for k in kkk:
                 if k == True:
-                    result *= kkk_dict['k'+str(count)]
+                    result *= kkk_dict['k' + str(count)]
                 count += 1
             context['calories_per_day'] = result
             if form.cleaned_data['calorie_content']:
                 calorie_content = form.cleaned_data['calorie_content']
-                one_calorie = 1000/calorie_content
+                one_calorie = 1000 / calorie_content
                 context['grams'] = result * one_calorie
         return render(request, 'functionalapp/calories.html', context=context)
 
+
 class DogPlaygroundsView(ListView):
+    """
+    Отображение списка собачьих площадок
+    """
     model = Playground
     template_name = "functionalapp/playgrounds.html"
     paginate_by = 100
+
+
+class CreateQuestionView(LoginRequiredMixin, CreateView):
+    """
+    Задать вопрос
+    """
+
+    model = Question
+    fields = "head", "body", "photo"
+    template_name = 'functionalapp/question_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        response = super().form_valid(form)
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("functionalapp:question-details", kwargs={'pk': self.object.pk})
+
+
+class QuestionListView(ListView):
+    """
+    Отобразить список вопросов
+    """
+    model = Question
+    template_name = 'functionalapp/question_list.html'
+    paginate = 30
+
+
+class QuestionDetailsView(DetailView):
+    """
+    Просмотреть страничку вопроса
+    """
+    model = Question
+    template_name = 'functionalapp/question_details.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_staff == True or self.request.user.pk == self.object.author.id:
+            context['permission'] = True
+        return context
+
+
+class QuestionUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
+    """
+    Редактировать вопрос
+    """
+
+    def test_func(self):
+        # owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff:
+            return True
+        elif self.request.user.pk == self.object.author.id:
+            return True
+        else:
+            return False
+
+    model = Question
+    fields = "head", "body", "photo"
+    template_name = 'functionalapp/question_update.html'
+
+    def get_success_url(self):
+        return reverse_lazy("functionalapp:question-details", kwargs={'pk': self.object.pk})
+
+class QuestionDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    """
+    Удалить вопрос
+    """
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        elif self.request.user.pk == self.object.author.id:
+            return True
+        else:
+            return False
+
+    model = Question
+    template_name = "functionalapp/question_confirm_delete.html"
+    success_url = reverse_lazy("functionalapp:question-list")

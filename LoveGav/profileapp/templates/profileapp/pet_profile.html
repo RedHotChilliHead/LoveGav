@@ -43,7 +43,7 @@
         {% endif %}
 
         {% if pet.passport %}
-            <p>Passport: {{ pet.passport }}</p>
+            <p>Passport: <a href="{{ pet.passport.url }}">{{ pet.passport }}</a></p>
         {% endif %}
 
         <div>{% if not pet.avatar %}

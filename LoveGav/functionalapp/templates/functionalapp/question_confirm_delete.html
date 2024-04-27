@@ -1,0 +1,23 @@
+{% extends "functionalapp/base.html" %}
+
+{% block title %}
+    Confirm delete your question
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>Do you really want to delete the question with the name "{{ object.head }}"?</h1>
+        <br>
+        <div>
+            <a href={% url 'functionalapp:question-update' pk=object.pk %}>Back to update the question</a>
+        </div>
+        <br>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Delete</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
