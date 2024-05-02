@@ -11,7 +11,7 @@
     </title>
     <style>
         .fixed-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -46,12 +46,44 @@
             align-items: flex-start;
         }
 
+        .mini-section {
+            display: flex;
+            justify-content: left;
+            align-items: flex-start;
+        }
+        .mini-section > section {
+            margin-right: 10px;
+        }
+
         .links {
             text-decoration: none;
             color: black;
             margin-right: 5px;
             margin-left: 5px;
             font-size: smaller;
+        }
+
+        .mini-links {
+            text-decoration: none;
+            color: black;
+        }
+
+        .box {
+            position: relative;
+            overflow: hidden;
+            width: 50px;
+            height: 50px;
+        }
+
+        .box img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%
         }
 
     </style>
@@ -69,6 +101,7 @@
                 <a class="links" href={% url 'functionalapp:calculator' username=user.username %}>Calculator</a>
                 <a class="links" href={% url 'functionalapp:playground-list' %}>Playgrounds</a>
                 <a class="links" href={% url 'functionalapp:question-list' %}>Questions</a>
+                <a class="links" href={% url 'profileapp:public-user-details' username=user.username %}>I</a>
             </div>
         </section>
         <section>

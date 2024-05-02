@@ -13,7 +13,8 @@
                 <p>
                 <li>
                     <b><a href={% url 'functionalapp:question-details' pk=object.pk %}>{{ object.head }}</a>
-                        {{ object.author }}</b><span style="color: grey"> at {{ object.data }}</span>
+                        <a class="mini-links" href={% url 'profileapp:public-user-details' username=object.author %}>{{ object.author }}</a></b>
+                <span style="color: grey"> at {{ object.data }}</span>
                 </li>
                 </p>
             </div>

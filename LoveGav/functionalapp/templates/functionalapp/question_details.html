@@ -16,8 +16,9 @@
             {% endif %}
         </h2>
 
-
-        <p><b>{{ question.author }}</b><span style="color: grey"> at {{ question.data }}</span></p>
+        <p><b><a class="mini-links"
+                 href={% url 'profileapp:public-user-details' username=question.author %}>{{ question.author }}</a></b>
+            <span style="color: grey"> at {{ question.data }}</span></p>
         <p>{{ question.body }}</p>
         {% if question.photo %}
             <p><img src="{{ question.photo.url }}" alt="photo" width="300px"></p>
@@ -27,13 +28,35 @@
         {% if answers %}
             <h2>Answers</h2>
             {% for answer in answers %}
-                <li>
-                    <b>{{ answer.author }}</b><span style="color: grey"> at {{ question.data }}</span>
-                    <p>{{ answer.body }}</p>
-                    {% if answer.photo %}
-                    <p><img src="{{ answer.photo.url }}" alt="photo" width="200px"></p>
-                    {% endif %}
-                </li>
+                {#                <li>#}
+                {#                    <b><a class="mini-links"#}
+                {#                          href={% url 'profileapp:public-user-details' username=answer.author %}>{{ answer.author }}</a></b>#}
+                {#                    <span style="color: grey"> at {{ question.data }}</span>#}
+                {#                    <p>{{ answer.body }}</p>#}
+                {#                    {% if answer.photo %}#}
+                {#                        <p><img src="{{ answer.photo.url }}" alt="photo" width="200px"></p>#}
+                {#                    {% endif %}#}
+                {#                </li>#}
+
+                <div class="mini-section">
+                    <section>
+                        {% if answer.author.profile.avatar %}
+                            <p class="box">
+                                <a href={% url 'profileapp:public-user-details' username=answer.author %}>
+                                <img src="{{ answer.author.profile.avatar.url }}" alt="photo"></a>
+                            </p>
+                        {% else %}
+                            <p><a href={% url 'profileapp:public-user-details' username=answer.author %}>
+                                <img src="{% static 'dog-logo.png' %}" alt="photo"></a></p>
+                        {% endif %}
+                    </section>
+                    <section>
+                        <b><a class="mini-links"
+                              href={% url 'profileapp:public-user-details' username=answer.author %}>{{ answer.author }}</a></b>
+                        <span style="color: grey"> at {{ question.data }}</span>
+                        <p>{{ answer.body }}</p>
+                    </section>
+                </div>
             {% endfor %}
         {% endif %}
 
