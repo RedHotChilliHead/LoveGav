@@ -17,6 +17,13 @@ def questions_photo_path(instance: "Question", filename: str) -> str:
     )
 
 
+def answers_photo_path(instance: "Answer", filename: str) -> str:
+    return 'answers/{author}/{filename}'.format(
+        author=instance.author,
+        filename=filename,
+    )
+
+
 class Playground(models.Model):
     town = models.CharField(max_length=100, blank=False)
     address = models.TextField(max_length=150, blank=False)
@@ -40,5 +47,5 @@ class Answer(models.Model):
     body = models.TextField(max_length=500, blank=False)
     data = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    photo = models.ImageField(null=True, upload_to=questions_photo_path, blank=True)
+    photo = models.ImageField(null=True, upload_to=answers_photo_path, blank=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)  # связь с таблицей вопросов

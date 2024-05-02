@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
@@ -8,7 +8,7 @@ from django.views import View
 from django.contrib.auth.models import User
 from profileapp.models import Pet
 from functionalapp.models import Playground, Question, Answer
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 
 class HelloView(View):
@@ -113,47 +113,41 @@ class QuestionListView(ListView):
 
 class QuestionDetailsView(View):
     """
-    Просмотреть страничку вопроса
+    Просмотреть страничку вопроса и ответы на него
     """
 
     def get(self, request, *args, **kwargs):
+        question = get_object_or_404(Question, pk=self.kwargs['pk'])
         form = AnswerForm()
-        question = Question.objects.get(pk=self.kwargs['pk'])
+        answers = Answer.objects.filter(question=question)
         context = {
             "question": question,
             "form": form,
-            "answers": Answer.objects.filter(question=question),
+            "answers": answers,
+            'permission': self.request.user.is_staff or self.request.user.pk == question.author.id
         }
-        if self.request.user.is_staff == True or self.request.user.pk == self.object.author.id:
-            context['permission'] = True
 
         return render(request, 'functionalapp/question_details.html', context=context)
 
     def post(self, request, *args, **kwargs):
-        form = AnswerForm(request.POST)
-        question = Question.objects.get(pk=self.kwargs['pk'])
-        context = {
-            "question": question,
-            "form": form,
-            "answers": Answer.objects.filter(question=question),
-        }
-        if self.request.user.is_staff == True or self.request.user.pk == self.object.author.id:
-            context['permission'] = True
+        question = get_object_or_404(Question, pk=self.kwargs['pk'])
+        form = AnswerForm(request.POST, request.FILES)
 
         if form.is_valid():
-            author = self.request.user
-            Answer.objects.create(**form.cleaned_data, author=author, question=question)
-            form = AnswerForm()
+            answer = form.save(commit=False)
+            answer.author = request.user
+            answer.question = question
+            answer.save()
+            return redirect('functionalapp:question-list')
         else:
-            form = AnswerForm()
-        return reverse_lazy("functionalapp:question-list")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.user.is_staff == True or self.request.user.pk == self.object.author.id:
-            context['permission'] = True
-        return context
-
+            answers = Answer.objects.filter(question=question)
+            context = {
+                'question': question,
+                'form': form,
+                'answers': answers,
+                'permission': self.request.user.is_staff or self.request.user.pk == question.author.id
+            }
+            return render(request, 'functionalapp/question_details.html', context=context)
 
 class QuestionUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """

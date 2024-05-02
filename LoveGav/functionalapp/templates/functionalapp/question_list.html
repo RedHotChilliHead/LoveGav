@@ -11,10 +11,11 @@
         {% for object in object_list %}
             <div>
                 <p>
-                <li><b><a href={% url 'functionalapp:question-details' pk=object.pk %}>{{ object.head }}</a></b></li>
+                <li>
+                    <b><a href={% url 'functionalapp:question-details' pk=object.pk %}>{{ object.head }}</a>
+                        {{ object.author }}</b><span style="color: grey"> at {{ object.data }}</span>
+                </li>
                 </p>
-                <p>Author: {{ object.author }}</p>
-                <p>{{ object.body }}</p>
             </div>
         {% endfor %}
     </div>
