@@ -3,11 +3,11 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
-from profileapp.forms import Calculator
+from .forms import Calculator, AnswerForm
 from django.views import View
 from django.contrib.auth.models import User
 from profileapp.models import Pet
-from functionalapp.models import Playground, Question
+from functionalapp.models import Playground, Question, Answer
 from django.http import HttpRequest, HttpResponse
 
 
@@ -89,7 +89,6 @@ class CreateQuestionView(LoginRequiredMixin, CreateView):
     """
     Задать вопрос
     """
-
     model = Question
     fields = "head", "body", "photo"
     template_name = 'functionalapp/question_form.html'
@@ -112,12 +111,42 @@ class QuestionListView(ListView):
     paginate = 30
 
 
-class QuestionDetailsView(DetailView):
+class QuestionDetailsView(View):
     """
     Просмотреть страничку вопроса
     """
-    model = Question
-    template_name = 'functionalapp/question_details.html'
+
+    def get(self, request, *args, **kwargs):
+        form = AnswerForm()
+        question = Question.objects.get(pk=self.kwargs['pk'])
+        context = {
+            "question": question,
+            "form": form,
+            "answers": Answer.objects.filter(question=question),
+        }
+        if self.request.user.is_staff == True or self.request.user.pk == self.object.author.id:
+            context['permission'] = True
+
+        return render(request, 'functionalapp/question_details.html', context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = AnswerForm(request.POST)
+        question = Question.objects.get(pk=self.kwargs['pk'])
+        context = {
+            "question": question,
+            "form": form,
+            "answers": Answer.objects.filter(question=question),
+        }
+        if self.request.user.is_staff == True or self.request.user.pk == self.object.author.id:
+            context['permission'] = True
+
+        if form.is_valid():
+            author = self.request.user
+            Answer.objects.create(**form.cleaned_data, author=author, question=question)
+            form = AnswerForm()
+        else:
+            form = AnswerForm()
+        return reverse_lazy("functionalapp:question-list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -147,10 +176,12 @@ class QuestionUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("functionalapp:question-details", kwargs={'pk': self.object.pk})
 
+
 class QuestionDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
     Удалить вопрос
     """
+
     def test_func(self):
         if self.request.user.is_staff:
             return True

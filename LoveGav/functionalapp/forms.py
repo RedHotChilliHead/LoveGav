@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import ModelForm
+from .models import Answer
 
 
 class Calculator(forms.Form):
@@ -24,3 +26,9 @@ class Calculator(forms.Form):
                             label='Puppy of medium and small breeds (3-6 months)', required=False)  # 1.6
     k10 = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'checkbox-class'}),
                              label='Puppy of medium and small breeds (6-12 months)', required=False)  # 1.2
+
+
+class AnswerForm(ModelForm):
+    class Meta:
+        model = Answer
+        fields = ["body", "photo"]

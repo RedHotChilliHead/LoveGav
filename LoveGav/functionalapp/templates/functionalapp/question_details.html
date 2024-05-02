@@ -5,18 +5,45 @@
 {% endblock %}
 
 {% block body %}
+    {% load static %}
     <div class="fixed-container">
-        <h1>{{ object.head }}</h1>
-        <p>Author: {{ object.author }}</p>
-        <p>{{ object.body }}</p>
-        {% if object.photo %}
-            <p><img src="{{ object.photo.url }}" alt="photo" width="300px"></p>
+        <h1>Pet questions</h1>
+        <h2>{{ question.head }}
+            {% if permission %}
+                <a style="margin-left: 10px"
+                   href={% url 'functionalapp:question-update' pk=question.pk %}><img
+                        src="{% static 'edit.png' %}" alt="edit user info" width="40px"></a>
+            {% endif %}
+        </h2>
+
+
+        <p><b>{{ question.author }}</b><span style="color: grey"> at {{ question.data }}</span></p>
+        <p>{{ question.body }}</p>
+        {% if question.photo %}
+            <p><img src="{{ question.photo.url }}" alt="photo" width="300px"></p>
         {% endif %}
-        <p>{{ object.data }}</p>
         <br>
-        {% if permission %}
-            <a href={% url 'functionalapp:question-update' pk=object.pk %}>Update the question</a>
+
+        {% if answers %}
+            <h2>Answers</h2>
+            {% for answer in answers %}
+                <li>
+                    <b>{{ answer.author }}</b><span style="color: grey"> at {{ question.data }}</span>
+                    <p>{{ answer.body }}</p>
+                    {% if answer.photo %}
+                    <p><img src="{{ answer.photo.url }}" alt="photo" width="200px"></p>
+                    {% endif %}
+                </li>
+            {% endfor %}
         {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Answer</button>
+        </form>
+
+        <br>
         <a href={% url 'functionalapp:question-list' %}>Back to other questions</a>
     </div>
 {% endblock %}

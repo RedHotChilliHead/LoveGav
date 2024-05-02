@@ -27,17 +27,18 @@ class Playground(models.Model):
         return f"Playground({self.pk})"
 
 
-class Answer(models.Model):
-    body = models.TextField(max_length=500, blank=False)
-    data = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    photo = models.ImageField(null=True, upload_to=questions_photo_path)
-
-
 class Question(models.Model):
     head = models.CharField(max_length=100, blank=False)
     body = models.TextField(max_length=500, blank=False)
     data = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     photo = models.ImageField(null=True, upload_to=questions_photo_path, blank=True)
-    answers = models.ForeignKey(Answer, on_delete=models.CASCADE, blank=True, null=True)  # связь с таблицей ответов
+    # answers = models.ForeignKey(Answer, on_delete=models.CASCADE, blank=True, null=True)  # связь с таблицей ответов
+
+
+class Answer(models.Model):
+    body = models.TextField(max_length=500, blank=False)
+    data = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    photo = models.ImageField(null=True, upload_to=questions_photo_path, blank=True)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)  # связь с таблицей вопросов
