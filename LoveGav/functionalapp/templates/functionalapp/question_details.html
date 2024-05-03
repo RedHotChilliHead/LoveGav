@@ -27,37 +27,31 @@
 
         {% if answers %}
             <h2>Answers</h2>
-            {% for answer in answers %}
-                {#                <li>#}
-                {#                    <b><a class="mini-links"#}
-                {#                          href={% url 'profileapp:public-user-details' username=answer.author %}>{{ answer.author }}</a></b>#}
-                {#                    <span style="color: grey"> at {{ question.data }}</span>#}
-                {#                    <p>{{ answer.body }}</p>#}
-                {#                    {% if answer.photo %}#}
-                {#                        <p><img src="{{ answer.photo.url }}" alt="photo" width="200px"></p>#}
-                {#                    {% endif %}#}
-                {#                </li>#}
-
-                <div class="mini-section">
-                    <section>
-                        {% if answer.author.profile.avatar %}
-                            <p class="box">
-                                <a href={% url 'profileapp:public-user-details' username=answer.author %}>
-                                <img src="{{ answer.author.profile.avatar.url }}" alt="photo"></a>
-                            </p>
-                        {% else %}
-                            <p><a href={% url 'profileapp:public-user-details' username=answer.author %}>
-                                <img src="{% static 'dog-logo.png' %}" alt="photo"></a></p>
-                        {% endif %}
-                    </section>
-                    <section>
-                        <b><a class="mini-links"
-                              href={% url 'profileapp:public-user-details' username=answer.author %}>{{ answer.author }}</a></b>
-                        <span style="color: grey"> at {{ question.data }}</span>
-                        <p>{{ answer.body }}</p>
-                    </section>
-                </div>
-            {% endfor %}
+            <ul class="list-group list-group-flush">
+                {% for answer in answers %}
+                    <li class="list-group-item">
+                        <div class="mini-section">
+                            <section>
+                                {% if answer.author.profile.avatar %}
+                                    <p class="box">
+                                        <a href={% url 'profileapp:public-user-details' username=answer.author %}>
+                                            <img src="{{ answer.author.profile.avatar.url }}" alt="photo"></a>
+                                    </p>
+                                {% else %}
+                                    <p><a href={% url 'profileapp:public-user-details' username=answer.author %}>
+                                        <img src="{% static 'dog-logo.png' %}" alt="photo"></a></p>
+                                {% endif %}
+                            </section>
+                            <section>
+                                <b><a style="color: black" class="mini-links"
+                                      href={% url 'profileapp:public-user-details' username=answer.author %}>{{ answer.author }}</a></b>
+                                <span style="color: grey"> at {{ question.data }}</span>
+                                <p>{{ answer.body }}</p>
+                            </section>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
         {% endif %}
 
         <form method="post" enctype="multipart/form-data">

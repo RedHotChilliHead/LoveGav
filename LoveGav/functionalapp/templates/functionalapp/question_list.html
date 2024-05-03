@@ -5,19 +5,53 @@
 {% endblock %}
 
 {% block body %}
+    {% load static %}
     <div class="fixed-container">
         <h1>Questions</h1>
-        <a href={% url 'functionalapp:question-create' %}>Ask a question</a>
-        {% for object in object_list %}
-            <div>
-                <p>
-                <li>
-                    <b><a href={% url 'functionalapp:question-details' pk=object.pk %}>{{ object.head }}</a>
-                        <a class="mini-links" href={% url 'profileapp:public-user-details' username=object.author %}>{{ object.author }}</a></b>
-                <span style="color: grey"> at {{ object.data }}</span>
+        <a href={% url 'functionalapp:question-create' %}><h3>Ask a question</h3></a>
+        <ul class="list-group list-group-flush">
+            {% for object in object_list %}
+
+                <li class="list-group-item">
+                    <div class="mini-section">
+                        <section>
+                            {% if object.author.profile.avatar %}
+                                <p class="box">
+                                    <a href={% url 'profileapp:public-user-details' username=object.author %}>
+                                        <img src="{{ object.author.profile.avatar.url }}" alt="photo"></a>
+                                </p>
+                            {% else %}
+                                <p><a href={% url 'profileapp:public-user-details' username=object.author %}>
+                                    <img src="{% static 'dog-logo.png' %}" alt="photo"></a></p>
+                            {% endif %}
+                        </section>
+                        <section style="color: grey">
+                            <a class="biglinks" href={% url 'functionalapp:question-details' pk=object.pk %}>
+                                <h4>{{ object.head }}</h4></a>
+                            <a class="mini-links"
+                               href={% url 'profileapp:public-user-details' username=object.author %}>{{ object.author }}</a>
+                            <span> at {{ object.data }}</span>
+                            {% if object.answer_set.count > 1 %}
+                                <span>
+                                <a class="mini-links"
+                                   href={% url 'functionalapp:question-details' pk=object.pk %}>
+                                    <img style="margin-left: 15px" src="{% static 'answer.png' %}" alt="photo"
+                                         width="20px">
+                                    {{ object.answer_set.count }} answers
+                                </a>
+                                </span>
+                            {% else %}
+                                <span>
+                                <a style="margin-left: 15px" class="mini-links"
+                                   href={% url 'functionalapp:question-details' pk=object.pk %}>to answer</a>
+                                </span>
+                            {% endif %}
+                            <br>
+                        </section>
+
+                    </div>
                 </li>
-                </p>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </ul>
     </div>
 {% endblock %}

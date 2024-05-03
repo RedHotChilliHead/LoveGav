@@ -110,7 +110,6 @@ class QuestionListView(ListView):
     template_name = 'functionalapp/question_list.html'
     paginate = 30
 
-
 class QuestionDetailsView(View):
     """
     Просмотреть страничку вопроса и ответы на него

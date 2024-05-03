@@ -51,6 +51,7 @@
             justify-content: left;
             align-items: flex-start;
         }
+
         .mini-section > section {
             margin-right: 10px;
         }
@@ -64,6 +65,15 @@
         }
 
         .mini-links {
+            text-decoration: none;
+            color: grey;
+        }
+
+        .mini-links:hover {
+            text-decoration: underline;
+        }
+
+        .biglinks {
             text-decoration: none;
             color: black;
         }
@@ -129,9 +139,12 @@
     <footer>
         <div class="fixed-container">
             <div class="foot">
-                <span><img src="{% static 'vk.png' %}" alt="logo" width="40px">VK</span>
-                <span><img src="{% static 'mail.png' %}" alt="logo" width="40px">MAIL</span>
-                <span><img src="{% static 'youtube.png' %}" alt="logo" width="40px">YOUTUBE</span>
+                <span><a class="biglinks" href='https://vk.com/'>
+                                    <img src="{% static 'vk.png' %}" alt="logo" width="40px">VK</a></span>
+                <span><a class="biglinks" href='https://mail.ru'>
+                                    <img src="{% static 'mail.png' %}" alt="logo" width="40px">MAIL</a></span>
+                <span><a class="biglinks" href='https://www.youtube.com'>
+                                    <img src="{% static 'youtube.png' %}" alt="logo" width="40px">YOUTUBE</a></span>
             </div>
             <div class="foot" style="color: grey">Copyright @ 2024</div>
         </div>

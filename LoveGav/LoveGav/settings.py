@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'profileapp.apps.ProfileappConfig',
     'functionalapp.apps.FunctionalappConfig',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [
