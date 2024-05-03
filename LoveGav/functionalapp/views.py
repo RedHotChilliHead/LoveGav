@@ -23,27 +23,27 @@ class HelloView(View):
         return render(request, 'functionalapp/hello.html', context=context)
 
 
-class СalorieСalculatorView(View):
+class СalorieСalculatorView(LoginRequiredMixin, View):
     """
     Калькулятор каллорий
     """
 
     def get(self, request, *args, **kwargs):
         form = Calculator()
-        arg_username = self.kwargs['username']
+        user = self.request.user
         context = {
-            "pets": Pet.objects.filter(owner__username=arg_username),
-            "user": User.objects.get(username=arg_username),
+            "pets": Pet.objects.filter(owner__username=user.username),
+            "user": user,
             "form": form,
         }
         return render(request, 'functionalapp/calories.html', context=context)
 
     def post(self, request, *args, **kwargs):
         form = Calculator(request.POST)
-        arg_username = self.kwargs['username']
+        user = self.request.user
         context = {
-            "pets": Pet.objects.filter(owner__username=arg_username),
-            "user": User.objects.get(username=arg_username),
+            "pets": Pet.objects.filter(owner__username=user.username),
+            "user": user,
             "form": form,
         }
         if form.is_valid():

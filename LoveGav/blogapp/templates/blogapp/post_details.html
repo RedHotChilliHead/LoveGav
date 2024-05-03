@@ -1,0 +1,66 @@
+{% extends "functionalapp/base.html" %}
+
+{% block title %}
+    {{ post.author }}`s post
+{% endblock %}
+
+{% block body %}
+    {% load static %}
+    <div class="fixed-container">
+        <h1>{{ post.author }}</h1>
+            {#            {% if permission %}#}
+            {#                <a style="margin-left: 10px"#}
+            {#                   href={% url 'functionalapp:question-update' pk=question.pk %}><img#}
+            {#                        src="{% static 'edit.png' %}" alt="edit user info" width="40px"></a>#}
+            {#            {% endif %}#}
+        </h4>
+
+
+                <p><b><a class="mini-links"
+                         href={% url 'blogapp:public-user-details' username=post.author %}>{{ post.author }}</a></b>
+                    <span style="color: grey"> at {{ post.data }}</span></p>
+                <p>{{ post.body }}</p>
+                {% if post.photo %}
+                    <p><img src="{{ post.photo.url }}" alt="photo" width="300px"></p>
+                {% endif %}
+                <br>
+
+                {% if comments %}
+                    <h2>Comments</h2>
+                    <ul class="list-group list-group-flush">
+                        {% for comment in comments %}
+                            <li class="list-group-item">
+                                <div class="mini-section">
+                                    <section>
+                                        {% if comment.author.profile.avatar %}
+                                            <p class="box">
+                                                <a href={% url 'blogapp:public-user-details' username=comment.author %}>
+                                                    <img src="{{ comment.author.profile.avatar.url }}" alt="photo"></a>
+                                            </p>
+                                        {% else %}
+                                            <p><a href={% url 'blogapp:public-user-details' username=comment.author %}>
+                                                <img src="{% static 'dog-logo.png' %}" alt="photo"></a></p>
+                                        {% endif %}
+                                    </section>
+                                    <section>
+                                        <b><a style="color: black" class="mini-links"
+                                              href={% url 'blogapp:public-user-details' username=comment.author %}>{{ comment.author }}</a></b>
+                                        <span style="color: grey"> at {{ comment.data }}</span>
+                                        <p>{{ comment.body }}</p>
+                                    </section>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success">Send</button>
+                </form>
+
+        <br>
+        <a href={% url 'blogapp:public-user-details' username=post.author.username %}>Back to other posts</a>
+    </div>
+{% endblock %}

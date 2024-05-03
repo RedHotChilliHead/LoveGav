@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 
     'profileapp.apps.ProfileappConfig',
     'functionalapp.apps.FunctionalappConfig',
-    'blog.apps.BlogConfig',
+    'blogapp.apps.BlogappConfig',
 ]
 
 MIDDLEWARE = [

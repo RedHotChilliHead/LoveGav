@@ -96,6 +96,27 @@
             border-radius: 50%
         }
 
+        /* Обновленные стили для контейнера постов */
+        .post-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Три столбца по умолчанию */
+            grid-gap: 20px; /* Пространство между постами */
+        }
+
+        /* Стили для отдельного поста */
+        .photo {
+            padding: 10px; /* Отступы вокруг каждого поста */
+            box-sizing: border-box; /* Учитываем внешние отступы в размере */
+        }
+
+        .photo img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border: 10px solid #eee; /* Обрамление для изображений */
+            border-radius: 5px; /* Закругление углов */
+        }
+
     </style>
 </head>
 <body>
@@ -108,10 +129,12 @@
                                                              class="login-page__logo"></a>
                 <a href={% url 'functionalapp:hello' %}><img src="{% static 'Lovegav.png' %}" alt="logo" width="200px"
                                                              class="login-page__logo"></a>
-                <a class="links" href={% url 'functionalapp:calculator' username=user.username %}>Calculator</a>
+                <a class="links" href={% url 'functionalapp:calculator' %}>Calculator</a>
                 <a class="links" href={% url 'functionalapp:playground-list' %}>Playgrounds</a>
                 <a class="links" href={% url 'functionalapp:question-list' %}>Questions</a>
-                <a class="links" href={% url 'profileapp:public-user-details' username=user.username %}>I</a>
+                {% if user.username %}
+                    <a class="links" href={% url 'blogapp:public-user-details' username=user.username %}>Blog</a>
+                {% endif %}
             </div>
         </section>
         <section>

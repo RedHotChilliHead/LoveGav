@@ -114,25 +114,6 @@ class UserDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
         context['pets'] = self.object.user.pet_set.all()
         return context
 
-class UserPublicDetaislView(DetailView):
-    """
-    Просмотр публичного профиля владельца
-    """
-
-    model = Profile
-    template_name = 'profileapp/public_user_profile.html'
-
-    def get_object(self, queryset=None):
-        user = get_object_or_404(User, username=self.kwargs['username'])
-        profile = get_object_or_404(Profile, user=user)
-        return profile
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user'] = self.object.user
-        # context['pets'] = self.object.user.pet_set.all()
-        return context
-
 class RegisterPetView(UserPassesTestMixin, CreateView):
     """
     Создание странички питомца

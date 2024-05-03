@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView
 
-from .views import RegisterView, logout_view, UpdateMeView, UserDetaislView, DeleteUserView, UserPublicDetaislView
+from .views import RegisterView, logout_view, UpdateMeView, UserDetaislView, DeleteUserView
 from .views import RegisterPetView, PetDetaislView, UpdatePetView, DeletePetView
 
 app_name = "profileapp"
@@ -14,7 +14,6 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
 
     path('<str:username>/', UserDetaislView.as_view(), name='user-details'),
-    path('<str:username>/public/', UserPublicDetaislView.as_view(), name='public-user-details'),
     path('<str:username>/update/', UpdateMeView.as_view(), name='update-me'),
     path('<str:username>/<int:pk>/delete/', DeleteUserView.as_view(), name='delete-me'),
 

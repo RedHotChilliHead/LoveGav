@@ -17,7 +17,7 @@
         </h2>
 
         <p><b><a class="mini-links"
-                 href={% url 'profileapp:public-user-details' username=question.author %}>{{ question.author }}</a></b>
+                 href={% url 'blogapp:public-user-details' username=question.author %}>{{ question.author }}</a></b>
             <span style="color: grey"> at {{ question.data }}</span></p>
         <p>{{ question.body }}</p>
         {% if question.photo %}
@@ -34,17 +34,17 @@
                             <section>
                                 {% if answer.author.profile.avatar %}
                                     <p class="box">
-                                        <a href={% url 'profileapp:public-user-details' username=answer.author %}>
+                                        <a href={% url 'blogapp:public-user-details' username=answer.author %}>
                                             <img src="{{ answer.author.profile.avatar.url }}" alt="photo"></a>
                                     </p>
                                 {% else %}
-                                    <p><a href={% url 'profileapp:public-user-details' username=answer.author %}>
+                                    <p><a href={% url 'blogapp:public-user-details' username=answer.author %}>
                                         <img src="{% static 'dog-logo.png' %}" alt="photo"></a></p>
                                 {% endif %}
                             </section>
                             <section>
                                 <b><a style="color: black" class="mini-links"
-                                      href={% url 'profileapp:public-user-details' username=answer.author %}>{{ answer.author }}</a></b>
+                                      href={% url 'blogapp:public-user-details' username=answer.author %}>{{ answer.author }}</a></b>
                                 <span style="color: grey"> at {{ question.data }}</span>
                                 <p>{{ answer.body }}</p>
                             </section>

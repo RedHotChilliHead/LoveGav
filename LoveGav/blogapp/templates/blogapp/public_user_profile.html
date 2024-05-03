@@ -1,0 +1,54 @@
+{% extends "functionalapp/base.html" %}
+
+{% block title %}
+    {{ user.username }}
+{% endblock %}
+
+{% block body %}
+    {% load static %}
+    <div class="fixed-container">
+        <div class="section-main">
+            <section>
+                <h1>{{ user.username }}<a style="padding-left: 10px" href={% url 'blogapp:create-post' username=user.username %}><img
+                        src="{% static 'plus.png' %}" alt="add post" width="40px"></a></h1>
+                <br>
+                <p>Date of birth: {{ user.profile.birth }}</p>
+                <p>Bio: {{ user.profile.bio }}</p>
+            </section>
+            <section>
+                <br>
+                <div>
+                    {% if profile.avatar %}
+                        <p><img src="{{ profile.avatar.url }}" alt="Avatar" height="250px"></p>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+        {% if posts %}
+            <div class="post-container">
+                {% for post in posts %}
+                    <section class="photo">
+                        <img src="{{ post.photo.url }}" alt="photo">
+                        <p>{{ post.description }}</p>
+                        <p>{{ post.data }}</p>
+                        {% if post.comment_set.count > 0 %}
+                                <span>
+                                <a class="mini-links"
+                                   href={% url 'blogapp:detail-post' username=user.username pk=post.pk %}>
+                                    <img src="{% static 'answer.png' %}" alt="comment"
+                                         width="20px">
+                                    {{ post.comment_set.count }} comments</a>
+                                </span>
+                            {% else %}
+                                <span>
+                                <a style="margin-left: 15px" class="mini-links"
+                                   href={% url 'blogapp:detail-post' username=user.username pk=post.pk %}>comment on</a>
+                                </span>
+                            {% endif %}
+                    </section>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

@@ -16,16 +16,20 @@
         <div>
             <a href={% url 'profileapp:logout' %}>Logout</a>
         </div>
+        {% if user.username %}
+            <div>
+                <a href={% url 'profileapp:update-me' username=user.username %}>Update-me</a>
+            </div>
+        {% endif %}
+        {% if user.username %}
+            <div>
+                <a href={% url 'profileapp:user-details' username=user.username %}>User-details</a>
+            </div>
+        {% endif %}
         <div>
-            <a href={% url 'profileapp:update-me' username=user.username %}>Update-me</a>
+            <a href={% url 'functionalapp:calculator' %}>Calorie calculator</a>
         </div>
         <div>
-            <a href={% url 'profileapp:user-details' username=user.username %}>User-details</a>
-        </div>
-    <div>
-            <a href={% url 'functionalapp:calculator' username=user.username %}>Calorie calculator</a>
-        </div>
-    <div>
             <a href={% url 'functionalapp:playground-list' %}>Dog playgrounds</a>
         </div>
     </div>

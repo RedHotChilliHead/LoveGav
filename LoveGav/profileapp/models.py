@@ -40,8 +40,8 @@ class Pet(models.Model):
     chip = models.BooleanField(blank=True, null=True)
     tatoo = models.TextField(max_length=20, blank=True)
     date_tatoo = models.DateField(blank=True, null=True)
-    passport = models.FileField(null=True, upload_to=pet_files_path)
-    avatar = models.ImageField(null=True, upload_to=pet_files_path)
+    passport = models.FileField(null=True, upload_to=pet_files_path, blank=True)
+    avatar = models.ImageField(null=True, upload_to=pet_files_path, blank=True)
     weight = models.FloatField(blank=True, null=True)
     def __str__(self) -> str:
         return f"({self.name})"

@@ -7,7 +7,7 @@ app_name = "functionalapp"
 
 urlpatterns = [
     path('hello/', HelloView.as_view(), name='hello'),
-    path('<str:username>/calculator/', СalorieСalculatorView.as_view(), name='calculator'),
+    path('calculator/', СalorieСalculatorView.as_view(), name='calculator'),
     path('playgrounds/', DogPlaygroundsView.as_view(), name="playground-list"),
     path('questions/', QuestionListView.as_view(), name="question-list"),
     path('questions/create/', CreateQuestionView.as_view(), name="question-create"),
