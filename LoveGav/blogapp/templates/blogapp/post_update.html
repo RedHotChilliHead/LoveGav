@@ -1,13 +1,12 @@
 {% extends "functionalapp/base.html" %}
 
 {% block title %}
-    Update me
+    Update the post
 {% endblock %}
 
 {% block body %}
     <div class="fixed-container">
-        <h1>Edit personal data</h1>
-        <h2>User {{ user.username }}</h2>
+        <h1>Update the post</h1>
         <div>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -17,8 +16,8 @@
         </div>
         <br>
         <div>
-            <a href={% url 'profileapp:user-details' username=user.username %}>Back to details</a><br><br>
-            <a href={% url 'profileapp:delete-me' username=user.username pk=user.id %}>Delete my profile</a>
+            <a href={% url 'blogapp:detail-post' pk=object.pk username=object.author.username %}>Back to my post</a><br><br>
+            <a href={% url 'blogapp:delete-post' pk=object.pk username=object.author.username %}>Delete my post</a>
         </div>
     </div>
 {% endblock %}

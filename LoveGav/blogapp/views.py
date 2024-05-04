@@ -1,9 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from blogapp.forms import CommentForm
 from blogapp.models import Post, Comment
@@ -45,6 +45,39 @@ class CreatePostView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("blogapp:public-user-details", kwargs={'username': self.request.user.username})
 
+class PostUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
+    """
+    Редактировать пост
+    """
+
+    def test_func(self):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        if self.request.user.is_staff or self.request.user.pk == post.author.id:
+            return True
+
+    model = Post
+    fields = "description", "photo"
+    template_name = 'blogapp/post_update.html'
+
+    def get_success_url(self):
+        return reverse_lazy("blogapp:detail-post", kwargs={'pk': self.object.pk, 'username': self.object.author.username})
+
+class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    """
+    Удалить пост
+    """
+
+    def test_func(self):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        if self.request.user.is_staff or self.request.user.pk == post.author.id:
+            return True
+
+    model = Post
+    template_name = "blogapp/post_confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy("blogapp:public-user-details", kwargs={'username': self.object.author.username})
+
 class PostDetaislView(LoginRequiredMixin, View):
     """
     Посмотреть пост и комментарии
@@ -54,11 +87,13 @@ class PostDetaislView(LoginRequiredMixin, View):
         post = get_object_or_404(Post, pk=self.kwargs['pk'])
         form = CommentForm()
         comments = Comment.objects.filter(post=post)
+        comments_of_user = comments.filter(author=self.request.user)
         context = {
             "post": post,
             "form": form,
             "comments": comments,
-            'permission': self.request.user.is_staff or self.request.user.pk == post.author.id
+            'permission': self.request.user.is_staff or self.request.user.pk == post.author.id,
+            'comments_of_user': comments_of_user,
         }
         return render(request, 'blogapp/post_details.html', context=context)
 
@@ -82,4 +117,21 @@ class PostDetaislView(LoginRequiredMixin, View):
             }
             return render(request, 'blogapp/post_details.html', context=context)
 
+class CommentDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    """
+    Удалить ответ
+    """
+
+    def test_func(self):
+        comment = get_object_or_404(Comment, pk=self.kwargs['pk'])
+        if self.request.user.is_staff or self.request.user.pk == comment.author.id:
+            return True
+
+    model = Comment
+    template_name = "blogapp/comment_confirm_delete.html"
+
+    def get_success_url(self):
+        comment = get_object_or_404(Comment, pk=self.kwargs['pk'])
+        post = get_object_or_404(Post, pk=comment.post.pk)
+        return reverse_lazy("blogapp:detail-post", kwargs={'pk': post.pk, 'username': post.author.username})
 

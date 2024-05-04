@@ -1,14 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from .forms import Calculator, AnswerForm
 from django.views import View
-from django.contrib.auth.models import User
 from profileapp.models import Pet
 from functionalapp.models import Playground, Question, Answer
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse
 
 
 class HelloView(View):
@@ -119,11 +118,13 @@ class QuestionDetailsView(View):
         question = get_object_or_404(Question, pk=self.kwargs['pk'])
         form = AnswerForm()
         answers = Answer.objects.filter(question=question)
+        answers_of_user = answers.filter(author=self.request.user)
         context = {
             "question": question,
             "form": form,
             "answers": answers,
-            'permission': self.request.user.is_staff or self.request.user.pk == question.author.id
+            'permission': self.request.user.is_staff or self.request.user.pk == question.author.id,
+            'answers_of_user': answers_of_user
         }
 
         return render(request, 'functionalapp/question_details.html', context=context)
@@ -154,13 +155,9 @@ class QuestionUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
 
     def test_func(self):
-        # owner = get_object_or_404(User, username=self.kwargs['username'])
-        if self.request.user.is_staff:
+        question = get_object_or_404(Question, pk=self.kwargs['pk'])
+        if self.request.user.is_staff or self.request.user.pk == question.author.id:
             return True
-        elif self.request.user.pk == self.object.author.id:
-            return True
-        else:
-            return False
 
     model = Question
     fields = "head", "body", "photo"
@@ -176,13 +173,28 @@ class QuestionDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
 
     def test_func(self):
-        if self.request.user.is_staff:
+        question = get_object_or_404(Question, pk=self.kwargs['pk'])
+        if self.request.user.is_staff or self.request.user.pk == question.author.id:
             return True
-        elif self.request.user.pk == self.object.author.id:
-            return True
-        else:
-            return False
 
     model = Question
     template_name = "functionalapp/question_confirm_delete.html"
     success_url = reverse_lazy("functionalapp:question-list")
+
+class AnswerDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    """
+    Удалить ответ
+    """
+
+    def test_func(self):
+        answer = get_object_or_404(Answer, pk=self.kwargs['pk'])
+        if self.request.user.is_staff or self.request.user.pk == answer.author.id:
+            return True
+
+    model = Answer
+    template_name = "functionalapp/answer_confirm_delete.html"
+
+    def get_success_url(self):
+        answer = get_object_or_404(Answer, pk=self.kwargs['pk'])
+        question = get_object_or_404(Question, pk=answer.question.pk)
+        return reverse_lazy("functionalapp:question-details", kwargs={'pk': question.pk})

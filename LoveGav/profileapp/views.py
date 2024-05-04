@@ -38,12 +38,8 @@ class DeleteUserView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
 
     def test_func(self):
         owner = get_object_or_404(User, username=self.kwargs['username'])
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
             return True
-        elif self.request.user.pk == owner.id:
-            return True
-        else:
-            return False
 
     model = User
     success_url = ("profileapp:hello")
@@ -65,12 +61,8 @@ class UpdateMeView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 
     def test_func(self):
         owner = get_object_or_404(User, username=self.kwargs['username'])
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
             return True
-        elif self.request.user.pk == owner.id:
-            return True
-        else:
-            return False
 
     model = Profile
     fields = "bio", "email", "birth", "avatar"
@@ -93,12 +85,8 @@ class UserDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
 
     def test_func(self):
         owner = get_object_or_404(User, username=self.kwargs['username'])
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
             return True
-        elif self.request.user.pk == owner.id:
-            return True
-        else:
-            return False
 
     model = Profile
     template_name = 'profileapp/user_profile.html'
@@ -121,12 +109,8 @@ class RegisterPetView(UserPassesTestMixin, CreateView):
 
     def test_func(self):
         owner = get_object_or_404(User, username=self.kwargs['username'])
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
             return True
-        elif self.request.user.pk == owner.id:
-            return True
-        else:
-            return False
 
     model = Pet
     fields = "name", "sex", "specie", "breed", "color", "birth", "chip", "tatoo", "date_tatoo", "weight"
@@ -148,12 +132,8 @@ class PetDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
 
     def test_func(self):
         owner = get_object_or_404(User, username=self.kwargs['username'])
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
             return True
-        elif self.request.user.pk == owner.id:
-            return True
-        else:
-            return False
 
     model = Pet
     template_name = 'profileapp/pet_profile.html'
@@ -167,12 +147,8 @@ class UpdatePetView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 
     def test_func(self):
         owner = get_object_or_404(User, username=self.kwargs['username'])
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
             return True
-        elif self.request.user.pk == owner.id:
-            return True
-        else:
-            return False
 
     model = Pet
     fields = "specie", "breed", "color", "birth", "chip", "tatoo", "date_tatoo", "passport", "avatar", "weight"
@@ -189,12 +165,8 @@ class DeletePetView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
 
     def test_func(self):
         owner = get_object_or_404(User, username=self.kwargs['username'])
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
             return True
-        elif self.request.user.pk == owner.id:
-            return True
-        else:
-            return False
 
     model = Pet
     template_name = "profileapp/pet_confirm_delete.html"

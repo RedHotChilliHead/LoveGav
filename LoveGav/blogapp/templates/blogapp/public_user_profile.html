@@ -9,7 +9,8 @@
     <div class="fixed-container">
         <div class="section-main">
             <section>
-                <h1>{{ user.username }}<a style="padding-left: 10px" href={% url 'blogapp:create-post' username=user.username %}><img
+                <h1>{{ user.username }}<a style="padding-left: 10px"
+                                          href={% url 'blogapp:create-post' username=user.username %}><img
                         src="{% static 'plus.png' %}" alt="add post" width="40px"></a></h1>
                 <br>
                 <p>Date of birth: {{ user.profile.birth }}</p>
@@ -32,19 +33,17 @@
                         <p>{{ post.description }}</p>
                         <p>{{ post.data }}</p>
                         {% if post.comment_set.count > 0 %}
-                                <span>
+                            <span>
                                 <a class="mini-links"
                                    href={% url 'blogapp:detail-post' username=user.username pk=post.pk %}>
-                                    <img src="{% static 'answer.png' %}" alt="comment"
-                                         width="20px">
                                     {{ post.comment_set.count }} comments</a>
                                 </span>
-                            {% else %}
-                                <span>
-                                <a style="margin-left: 15px" class="mini-links"
+                        {% else %}
+                            <span>
+                                <a class="mini-links"
                                    href={% url 'blogapp:detail-post' username=user.username pk=post.pk %}>comment on</a>
                                 </span>
-                            {% endif %}
+                        {% endif %}
                     </section>
                 {% endfor %}
             </div>

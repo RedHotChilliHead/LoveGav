@@ -1,0 +1,23 @@
+{% extends "functionalapp/base.html" %}
+
+{% block title %}
+    Confirm delete your post
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>Do you really want to delete this post?</h1>
+        <br>
+        <div>
+            <a href={% url 'blogapp:update-post' pk=object.pk username=object.author.username %}>Back to update the post</a>
+        </div>
+        <br>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Delete</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

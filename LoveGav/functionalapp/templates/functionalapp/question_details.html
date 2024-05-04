@@ -48,6 +48,12 @@
                                 <span style="color: grey"> at {{ question.data }}</span>
                                 <p>{{ answer.body }}</p>
                             </section>
+                        <section>
+                            {% if answer in answers_of_user or user.is_staff %}
+                                <a class="mini-links"
+                                   href={% url 'functionalapp:answer-delete' pk=answer.pk %}>delete</a>
+                            {% endif %}
+                        </section>
                         </div>
                     </li>
                 {% endfor %}
