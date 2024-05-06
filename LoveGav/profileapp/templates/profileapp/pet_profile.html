@@ -46,6 +46,25 @@
             <p>Passport: <a href="{{ pet.passport.url }}">{{ pet.passport }}</a></p>
         {% endif %}
 
+        {% if mood %}
+            <p>Latest mood: {{ mood.mood_day }} <a
+                    href={% url 'profileapp:delete-mood' username=user.username pk=mood.id %}>to delete</a></p>
+        {% endif %}
+        <p><a href={% url 'profileapp:create-mood' username=user.username pk=pet.id %}>to mark mood</a></p>
+
+        {% if heat %}
+            <p>Latest heat: {{ heat.data }} <a
+                    href={% url 'profileapp:delete-heat' username=user.username pk=heat.id %}>to delete</a></p>
+        {% endif %}
+        <p><a href={% url 'profileapp:create-heat' username=user.username pk=pet.id %}>to mark heat</a></p>
+
+        {% if treatment %}
+            <p>Latest treatment: {{ treatment.data }} <a
+                    href={% url 'profileapp:delete-treatment' username=user.username pk=treatment.id %}>to delete</a>
+            </p></p>
+        {% endif %}
+        <p><a href={% url 'profileapp:create-treatment' username=user.username pk=pet.id %}>to mark treatment</a></p>
+
         <div>{% if not pet.avatar %}
             <p>The photo has not been uploaded yet</p>
         {% else %}
@@ -53,5 +72,6 @@
         {% endif %}
         </div>
         <a href={% url 'profileapp:user-details' username=user.username %}>Back to an owner profile</a>
+        {#        <br><a href={% url 'profileapp:dairy' username=user.username pk=pet.id %}>Dairy</a>#}
     </div>
 {% endblock %}

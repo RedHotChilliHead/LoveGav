@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
+from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
-from profileapp.models import Profile, Pet
+from profileapp.models import Profile, Pet, Mood, Heat, Treatment
 
 
 class RegisterView(CreateView):  # форма регистрации пользователя
@@ -42,7 +42,7 @@ class DeleteUserView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
             return True
 
     model = User
-    success_url = ("profileapp:hello")
+    success_url = reverse_lazy("functionalapp:hello")
     template_name = "profileapp/user_confirm_delete.html"
 
 
@@ -139,6 +139,25 @@ class PetDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     template_name = 'profileapp/pet_profile.html'
     context_object_name = 'pet'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context["mood"] = Mood.objects.filter(pet=self.object).latest('data')
+        except Mood.DoesNotExist:
+            context["mood"] = None
+
+        try:
+            context["heat"] = Heat.objects.filter(pet=self.object).latest('data')
+        except Heat.DoesNotExist:
+            context["heat"] = None
+
+        try:
+            context["treatment"] = Treatment.objects.filter(pet=self.object).latest('data')
+        except Heat.DoesNotExist:
+            context["treatment"] = None
+
+        return context
+
 
 class UpdatePetView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
@@ -172,4 +191,118 @@ class DeletePetView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     template_name = "profileapp/pet_confirm_delete.html"
 
     def get_success_url(self):
-        return reverse("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.kwargs['pk']})
+        return reverse("profileapp:user-details", kwargs={'username': self.kwargs['username']})
+
+class CreateMoodView(UserPassesTestMixin, CreateView):
+    """
+    Создание записи о настроении
+    """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
+            return True
+
+    model = Mood
+    fields = "mood_day", "data"
+    template_name = 'profileapp/mood.html'
+
+    def form_valid(self, form):
+        form.instance.pet = get_object_or_404(Pet, pk=self.kwargs['pk'])
+        response = super().form_valid(form)
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("profileapp:pet-details", kwargs=self.kwargs)
+
+class DeleteMoodView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    """
+    Удалить запись о настроении
+    """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
+            return True
+
+    model = Mood
+    template_name = "profileapp/mood_confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})
+
+class CreateHeatView(UserPassesTestMixin, CreateView):
+    """
+    Создание записи о течке
+    """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
+            return True
+
+    model = Heat
+    fields = "soreness", "data"
+    template_name = 'profileapp/heat.html'
+
+    def form_valid(self, form):
+        form.instance.pet = get_object_or_404(Pet, pk=self.kwargs['pk'])
+        response = super().form_valid(form)
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("profileapp:pet-details", kwargs=self.kwargs)
+
+class DeleteHeatView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    """
+    Удалить запись о течке
+    """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
+            return True
+
+    model = Heat
+    template_name = "profileapp/heat_confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})
+
+class CreateTreatmentView(UserPassesTestMixin, CreateView):
+    """
+    Создание записи о лечении, обработках и вакцинировании
+    """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
+            return True
+
+    model = Treatment
+    fields = "name", "data", "data_next"
+    template_name = 'profileapp/treatment.html'
+
+    def form_valid(self, form):
+        form.instance.pet = get_object_or_404(Pet, pk=self.kwargs['pk'])
+        response = super().form_valid(form)
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("profileapp:pet-details", kwargs=self.kwargs)
+
+class DeleteTreatmentView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    """
+    Удалить запись о лечении, обработках и вакцинировании
+    """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
+            return True
+
+    model = Treatment
+    template_name = "profileapp/treatment_confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})

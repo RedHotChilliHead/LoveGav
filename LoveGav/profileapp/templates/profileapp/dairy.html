@@ -1,0 +1,32 @@
+{% extends "functionalapp/base.html" %}
+
+{% block title %}
+    Dairy
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>Dairy</h1>
+        {% if dairy %}
+        {{ dairy.pet.name }}
+        {{ dairy.pet.owner }}
+        {% endif %}
+{#        {% for object in object_list %}#}
+{#            <div class="section-main">#}
+{#                <section>#}
+{#                    <div>#}
+{#                        <p><li><b>{{ object.address }}</b></li></p>#}
+{#                         <p>{{ object.description }}</p>#}
+{#                    </div>#}
+{#                </section>#}
+{#                <section>#}
+{#                    {% if not object.photo %}#}
+{#                        <p>The photo has not been uploaded yet</p>#}
+{#                    {% else %}#}
+{#                        <p><img style="border-radius: 20px" src="{{ object.photo.url }}" alt="photo" width="300px"></p>#}
+{#                    {% endif %}#}
+{#                </section>#}
+{#            </div>#}
+{#        {% endfor %}#}
+    </div>
+{% endblock %}

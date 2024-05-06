@@ -1,0 +1,23 @@
+{% extends "functionalapp/base.html" %}
+
+{% block title %}
+    Confirm delete mood
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-container">
+        <h1>Are you sure you want to delete mood at {{ object.data }}?</h1>
+        <br>
+        <div>
+            <a href={% url 'profileapp:pet-details' username=user.username pk=object.pet.pk %}>Back to details</a>
+        </div>
+        <br>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Delete</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

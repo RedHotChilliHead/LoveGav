@@ -24,7 +24,6 @@ urlpatterns = [
     path('profile/', include('profileapp.urls')),
     path('func/', include('functionalapp.urls')),
     path('blog/', include('blogapp.urls')),
-    path('dairy/', include('dairyapp.urls')),
 ]
 
 if settings.DEBUG:
