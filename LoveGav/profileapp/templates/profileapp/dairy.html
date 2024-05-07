@@ -5,28 +5,55 @@
 {% endblock %}
 
 {% block body %}
+    {% load static %}
     <div class="fixed-container">
-        <h1>Dairy</h1>
-        {% if dairy %}
-        {{ dairy.pet.name }}
-        {{ dairy.pet.owner }}
-        {% endif %}
-{#        {% for object in object_list %}#}
-{#            <div class="section-main">#}
-{#                <section>#}
-{#                    <div>#}
-{#                        <p><li><b>{{ object.address }}</b></li></p>#}
-{#                         <p>{{ object.description }}</p>#}
-{#                    </div>#}
-{#                </section>#}
-{#                <section>#}
-{#                    {% if not object.photo %}#}
-{#                        <p>The photo has not been uploaded yet</p>#}
-{#                    {% else %}#}
-{#                        <p><img style="border-radius: 20px" src="{{ object.photo.url }}" alt="photo" width="300px"></p>#}
-{#                    {% endif %}#}
-{#                </section>#}
-{#            </div>#}
-{#        {% endfor %}#}
+        <h1> {{ pet.name }}'s dairy</h1>
+        <div class="section-main">
+
+            <section>
+                <h2>Moods<a style="margin-left: 10px"
+                            href={% url 'profileapp:create-mood' username=user.username pk=pet.id %}><img
+                        src="{% static 'plus.png' %}" alt="to mark mood" width="40px"></a></h2>
+                {% for mood in moods %}
+                    <ul>
+                        <li>{{ mood.mood_day }} at {{ mood.data }}<a style="margin-left: 10px"
+                                                                     href={% url 'profileapp:delete-mood' username=user.username pk=mood.id %}><img
+                                src="{% static 'X.png' %}" alt="delete mood" width="15px"></a></li>
+                    </ul>
+                {% endfor %}
+            </section>
+
+            <section>
+                <h2>Heat<a style="margin-left: 10px"
+                           href={% url 'profileapp:create-heat' username=user.username pk=pet.id %}><img
+                        src="{% static 'plus.png' %}" alt="to mark heat" width="40px"></a></h2>
+                {% for heat in heats %}
+                    <ul>
+                        <li>{{ heat.soreness }} at {{ heat.data }}<a style="margin-left: 10px"
+                                                                     href={% url 'profileapp:delete-heat' username=user.username pk=heat.id %}><img
+                                src="{% static 'X.png' %}" alt="delete heat" width="15px"></a></li>
+                    </ul>
+                {% endfor %}
+            </section>
+
+            <section>
+                <h2>Treatment<a style="margin-left: 10px"
+                                href={% url 'profileapp:create-treatment' username=user.username pk=pet.id %}><img
+                        src="{% static 'plus.png' %}" alt="to mark treatment" width="40px"></a></h2>
+                {% for treatment in treatments %}
+                    <ul>
+                        <li>{{ treatment.name }} at {{ treatment.data }} and next data {{ treatment.data_next }}<a
+                                style="margin-left: 10px"
+                                href={% url 'profileapp:delete-treatment' username=user.username pk=treatment.id %}><img
+                                src="{% static 'X.png' %}" alt="delete treatment" width="15px"></a></li>
+                    </ul>
+                {% endfor %}
+            </section>
+
+        </div>
+        <br><br><br>
+        <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}>back to {{ pet.name }}`s
+            profile</a>
+    <br><br><br><a href={% url 'profileapp:export-dairy' username=user.username pk=pet.id %}>EXPORT PDF</a>
     </div>
 {% endblock %}

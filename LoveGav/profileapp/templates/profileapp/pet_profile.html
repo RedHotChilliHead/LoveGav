@@ -7,71 +7,92 @@
 {% block body %}
     {% load static %}
     <div class="fixed-container">
-        <h1>{{ pet.name }}`s data<a style="margin-left: 10px"
-                                    href={% url 'profileapp:update-pet' username=user.username pk=pet.id %}><img
-                src="{% static 'edit.png' %}" alt="edit pet info" width="40px"></a></h1>
-        <br>
-        <p>Owner: {{ pet.owner }}</p>
-        <p>Sex: {{ pet.sex }}</p>
+        <div class="section-main">
+            <section>
+                <h1>{{ pet.name }}`s data<a style="margin-left: 10px"
+                                            href={% url 'profileapp:update-pet' username=user.username pk=pet.id %}><img
+                        src="{% static 'edit.png' %}" alt="edit pet info" width="40px"></a></h1>
+                <br>
+                <p>Owner: {{ pet.owner }}</p>
+                <p>Sex: {{ pet.sex }}</p>
 
-        {% if pet.specie %}
-            <p>Specie: {{ pet.specie }}</p>
-        {% endif %}
+                {% if pet.specie %}
+                    <p>Specie: {{ pet.specie }}</p>
+                {% endif %}
 
-        {% if pet.breed %}
-            <p>Breed: {{ pet.breed }}</p>
-        {% endif %}
+                {% if pet.breed %}
+                    <p>Breed: {{ pet.breed }}</p>
+                {% endif %}
 
-        {% if pet.birth %}
-            <p>Date of birth: {{ pet.birth }}</p>
-        {% endif %}
+                {% if pet.birth %}
+                    <p>Date of birth: {{ pet.birth }}</p>
+                {% endif %}
 
-        {% if pet.chip %}
-            <p>Chip: {{ pet.chip }}</p>
-        {% endif %}
+                {% if pet.chip %}
+                    <p>Chip: {{ pet.chip }}</p>
+                {% endif %}
 
-        {% if pet.tatoo %}
-            <p>Tatoo: {{ pet.tatoo }}</p>
-        {% endif %}
+                {% if pet.tatoo %}
+                    <p>Tatoo: {{ pet.tatoo }}</p>
+                {% endif %}
 
-        {% if pet.date_tatoo %}
-            <p>Date of tatoo: {{ pet.date_tatoo }}</p>
-        {% endif %}
+                {% if pet.date_tatoo %}
+                    <p>Date of tatoo: {{ pet.date_tatoo }}</p>
+                {% endif %}
 
-        {% if pet.weight %}
-            <p>Weight: {{ pet.weight }} (kg)</p>
-        {% endif %}
+                {% if pet.weight %}
+                    <p>Weight: {{ pet.weight }} (kg)</p>
+                {% endif %}
 
-        {% if pet.passport %}
-            <p>Passport: <a href="{{ pet.passport.url }}">{{ pet.passport }}</a></p>
-        {% endif %}
+                {% if pet.passport %}
+                    <p>Passport: <a href="{{ pet.passport.url }}">{{ pet.passport }}</a></p>
+                {% endif %}
 
-        {% if mood %}
-            <p>Latest mood: {{ mood.mood_day }} <a
-                    href={% url 'profileapp:delete-mood' username=user.username pk=mood.id %}>to delete</a></p>
-        {% endif %}
-        <p><a href={% url 'profileapp:create-mood' username=user.username pk=pet.id %}>to mark mood</a></p>
+                {% if not pet.avatar %}
+                    <p>The photo has not been uploaded yet</p>
+                {% else %}
+                    <p><img src="{{ pet.avatar.url }}" alt="Avatar" width="300px"></p>
+                {% endif %}
 
-        {% if heat %}
-            <p>Latest heat: {{ heat.data }} <a
-                    href={% url 'profileapp:delete-heat' username=user.username pk=heat.id %}>to delete</a></p>
-        {% endif %}
-        <p><a href={% url 'profileapp:create-heat' username=user.username pk=pet.id %}>to mark heat</a></p>
+                <a href={% url 'profileapp:user-details' username=user.username %}>Back to an owner profile</a>
+            </section>
 
-        {% if treatment %}
-            <p>Latest treatment: {{ treatment.data }} <a
-                    href={% url 'profileapp:delete-treatment' username=user.username pk=treatment.id %}>to delete</a>
-            </p></p>
-        {% endif %}
-        <p><a href={% url 'profileapp:create-treatment' username=user.username pk=pet.id %}>to mark treatment</a></p>
+            <section>
+                <h2>Dairy</h2>
+                <br>
+                {% if mood %}
+                    <p>Latest mood: {{ mood.mood_day }}
+                    <a style="margin-left: 10px"
+                       href={% url 'profileapp:delete-mood' username=user.username pk=mood.id %}><img
+                            src="{% static 'X.png' %}" alt="delete mood" width="20px"></a>
+                {% endif %}
+                <a style="margin-left: 10px"
+                   href={% url 'profileapp:create-mood' username=user.username pk=pet.id %}><img
+                        src="{% static 'plus.png' %}" alt="to mark mood" width="20px"></a></p>
 
-        <div>{% if not pet.avatar %}
-            <p>The photo has not been uploaded yet</p>
-        {% else %}
-            <p><img src="{{ pet.avatar.url }}" alt="Avatar" width="300px"></p>
-        {% endif %}
+                {% if heat %}
+                    <p>Latest heat: {{ heat.data }}
+                    <a style="margin-left: 10px"
+                       href={% url 'profileapp:delete-heat' username=user.username pk=heat.id %}><img
+                            src="{% static 'X.png' %}" alt="delete heat" width="20px"></a>
+                {% endif %}
+                <a style="margin-left: 10px"
+                   href={% url 'profileapp:create-heat' username=user.username pk=pet.id %}><img
+                        src="{% static 'plus.png' %}" alt="to mark heat" width="20px"></a></p>
+
+                {% if treatment %}
+                    <p>Latest treatment: {{ treatment.data }}
+                    <a style="margin-left: 10px"
+                       href={% url 'profileapp:delete-treatment' username=user.username pk=treatment.id %}><img
+                            src="{% static 'X.png' %}" alt="delete treatment" width="20px"></a>
+
+                {% endif %}
+                <a style="margin-left: 10px"
+                   href={% url 'profileapp:create-treatment' username=user.username pk=pet.id %}><img
+                        src="{% static 'plus.png' %}" alt="to mark treatment" width="20px"></a>
+
+                <br><br><a href={% url 'profileapp:dairy-pet-details' username=user.username pk=pet.id %}>more detailed</a>
+            </section>
         </div>
-        <a href={% url 'profileapp:user-details' username=user.username %}>Back to an owner profile</a>
-        {#        <br><a href={% url 'profileapp:dairy' username=user.username pk=pet.id %}>Dairy</a>#}
     </div>
 {% endblock %}

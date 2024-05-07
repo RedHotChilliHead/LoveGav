@@ -3,7 +3,8 @@ from django.contrib.auth.views import LoginView
 
 from .views import RegisterView, logout_view, UpdateMeView, UserDetaislView, DeleteUserView
 from .views import RegisterPetView, PetDetaislView, UpdatePetView, DeletePetView
-from .views import CreateMoodView, DeleteMoodView, CreateHeatView, DeleteHeatView, CreateTreatmentView, DeleteTreatmentView
+from .views import CreateMoodView, DeleteMoodView, CreateHeatView, DeleteHeatView, CreateTreatmentView, \
+    DeleteTreatmentView, DairyDetaislView, DairyPetDataExportView
 
 app_name = "profileapp"
 
@@ -20,6 +21,7 @@ urlpatterns = [
 
     path('<str:username>/register_pet/', RegisterPetView.as_view(), name='register-pet'),
     path('<str:username>/<int:pk>_pet/', PetDetaislView.as_view(), name='pet-details'),
+    path('<str:username>/<int:pk>_pet/dairy/', DairyDetaislView.as_view(), name='dairy-pet-details'),
     path('<str:username>/<int:pk>_pet/update/', UpdatePetView.as_view(), name='update-pet'),
     path('<str:username>/<int:pk>_pet/delete/', DeletePetView.as_view(), name='delete-pet'),
 
@@ -31,4 +33,6 @@ urlpatterns = [
 
     path('<str:username>/<int:pk>_pet/treatment-create/', CreateTreatmentView.as_view(), name='create-treatment'),
     path('<str:username>/<int:pk>_treatment/delete/', DeleteTreatmentView.as_view(), name='delete-treatment'),
+
+    path('<str:username>/<int:pk>_pet/export/', DairyPetDataExportView.as_view(), name='export-dairy'),
 ]

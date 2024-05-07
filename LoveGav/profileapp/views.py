@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, TemplateView
+from django.views import View
+from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
 from profileapp.models import Profile, Pet, Mood, Heat, Treatment
+from fpdf import FPDF
 
 
 class RegisterView(CreateView):  # форма регистрации пользователя
@@ -102,6 +104,7 @@ class UserDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
         context['pets'] = self.object.user.pet_set.all()
         return context
 
+
 class RegisterPetView(UserPassesTestMixin, CreateView):
     """
     Создание странички питомца
@@ -193,6 +196,7 @@ class DeletePetView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse("profileapp:user-details", kwargs={'username': self.kwargs['username']})
 
+
 class CreateMoodView(UserPassesTestMixin, CreateView):
     """
     Создание записи о настроении
@@ -215,6 +219,7 @@ class CreateMoodView(UserPassesTestMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("profileapp:pet-details", kwargs=self.kwargs)
 
+
 class DeleteMoodView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
     Удалить запись о настроении
@@ -229,7 +234,9 @@ class DeleteMoodView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     template_name = "profileapp/mood_confirm_delete.html"
 
     def get_success_url(self):
-        return reverse_lazy("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})
+        return reverse_lazy("profileapp:pet-details",
+                            kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})
+
 
 class CreateHeatView(UserPassesTestMixin, CreateView):
     """
@@ -253,6 +260,7 @@ class CreateHeatView(UserPassesTestMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("profileapp:pet-details", kwargs=self.kwargs)
 
+
 class DeleteHeatView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
     Удалить запись о течке
@@ -267,7 +275,9 @@ class DeleteHeatView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     template_name = "profileapp/heat_confirm_delete.html"
 
     def get_success_url(self):
-        return reverse_lazy("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})
+        return reverse_lazy("profileapp:pet-details",
+                            kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})
+
 
 class CreateTreatmentView(UserPassesTestMixin, CreateView):
     """
@@ -291,6 +301,7 @@ class CreateTreatmentView(UserPassesTestMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("profileapp:pet-details", kwargs=self.kwargs)
 
+
 class DeleteTreatmentView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
     Удалить запись о лечении, обработках и вакцинировании
@@ -305,4 +316,107 @@ class DeleteTreatmentView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     template_name = "profileapp/treatment_confirm_delete.html"
 
     def get_success_url(self):
-        return reverse_lazy("profileapp:pet-details", kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})
+        return reverse_lazy("profileapp:pet-details",
+                            kwargs={'username': self.kwargs['username'], 'pk': self.object.pet.pk})
+
+
+class DairyDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
+    """
+    Просмотр подробной информации об обработках, течках и вакцинировании питомца
+    """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
+            return True
+
+    model = Pet
+    template_name = 'profileapp/dairy.html'
+    context_object_name = 'pet'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context["moods"] = Mood.objects.filter(pet=self.object)
+        except Mood.DoesNotExist:
+            context["mood"] = None
+
+        try:
+            context["heats"] = Heat.objects.filter(pet=self.object)
+        except Heat.DoesNotExist:
+            context["heat"] = None
+
+        try:
+            context["treatments"] = Treatment.objects.filter(pet=self.object)
+        except Heat.DoesNotExist:
+            context["treatment"] = None
+
+        return context
+
+
+class DairyPetDataExportView(UserPassesTestMixin, LoginRequiredMixin, View):
+    """
+    Представление экспорта дневника конкретного питомца в pdf
+    """
+
+    def test_func(self):
+        owner = get_object_or_404(User, username=self.kwargs['username'])
+        if self.request.user.is_staff or self.request.user.pk == owner.id:
+            return True
+
+    def get(self, request: HttpRequest, username, pk):
+        pet = get_object_or_404(Pet, pk=self.kwargs['pk'])
+        try:
+            moods = Mood.objects.filter(pet=pet)
+        except Mood.DoesNotExist:
+            moods = None
+        try:
+            heats = Heat.objects.filter(pet=pet)
+        except Heat.DoesNotExist:
+            heats = None
+        try:
+            treatments = Treatment.objects.filter(pet=pet)
+        except Heat.DoesNotExist:
+            treatments = None
+
+        pdf = FPDF()  # (orientation='P', unit='mm', format='A4')
+        pdf.add_page()
+        pdf.set_font("times", size=18)
+
+        pdf.image("profileapp/static/Lovegav.png", x=50, y=None, h=20)
+        pdf.cell(200, 10, txt="", ln=1, align="L")
+        text = str(pet.name) + "`s dairy "
+        pdf.cell(200, 10, txt=text, ln=1, align="C")
+        pdf.cell(200, 10, txt="", ln=1, align="L")
+
+        if moods:
+            pdf.set_font("times", size=18)
+            pdf.cell(200, 10, txt="Moods", ln=1, align="L")
+            pdf.set_font("times", size=14)
+            for mood in moods:
+                text = str(mood.mood_day) + " at " + str(mood.data)
+                pdf.cell(200, 10, txt=text, ln=1, align="L")
+        pdf.cell(200, 10, txt="", ln=1, align="L")
+
+        if heats:
+            pdf.set_font("times", size=18)
+            pdf.cell(200, 10, txt="Heats", ln=1, align="L")
+            pdf.set_font("times", size=14)
+            for heat in heats:
+                text = str(heat.soreness) + " at " + str(heat.data)
+                pdf.cell(200, 10, txt=text, ln=1, align="L")
+        pdf.cell(200, 10, txt="", ln=1, align="L")
+
+        if treatments:
+            pdf.set_font("times", size=18)
+            pdf.cell(200, 10, txt="Treatments", ln=1, align="L")
+            pdf.set_font("times", size=14)
+            for treatment in treatments:
+                text = str(treatment.name) + " at " + str(treatment.data) + " and next data: " + str(
+                    treatment.data_next)
+                pdf.cell(200, 10, txt=text, ln=1, align="L")
+        pdf.cell(200, 10, txt="", ln=1, align="L")
+
+        pdf.output("dairy_demo.pdf")
+
+        return redirect(reverse("profileapp:dairy-pet-details", kwargs=self.kwargs))
