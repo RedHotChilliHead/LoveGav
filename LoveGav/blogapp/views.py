@@ -25,8 +25,7 @@ class UserPublicDetaislView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user'] = self.object.user
-        context['posts'] = Post.objects.filter(author=self.object.user)
+        context['user_author'] = self.object.user
         return context
 
 class CreatePostView(LoginRequiredMixin, CreateView):
@@ -86,14 +85,10 @@ class PostDetaislView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=self.kwargs['pk'])
         form = CommentForm()
-        comments = Comment.objects.filter(post=post)
-        comments_of_user = comments.filter(author=self.request.user)
         context = {
             "post": post,
             "form": form,
-            "comments": comments,
             'permission': self.request.user.is_staff or self.request.user.pk == post.author.id,
-            'comments_of_user': comments_of_user,
         }
         return render(request, 'blogapp/post_details.html', context=context)
 
@@ -108,11 +103,9 @@ class PostDetaislView(LoginRequiredMixin, View):
             comment.save()
             return redirect('blogapp:public-user-details', username=post.author.username)
         else:
-            comments = Comment.objects.filter(post=post)
             context = {
                 "post": post,
                 "form": form,
-                "comments": comments,
                 'permission': self.request.user.is_staff or self.request.user.pk == post.author.id
             }
             return render(request, 'blogapp/post_details.html', context=context)

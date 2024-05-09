@@ -14,7 +14,7 @@
                 <h2>Moods<a style="margin-left: 10px"
                             href={% url 'profileapp:create-mood' username=user.username pk=pet.id %}><img
                         src="{% static 'plus.png' %}" alt="to mark mood" width="40px"></a></h2>
-                {% for mood in moods %}
+                {% for mood in pet.mood_set.all %}
                     <ul>
                         <li>{{ mood.mood_day }} at {{ mood.data }}<a style="margin-left: 10px"
                                                                      href={% url 'profileapp:delete-mood' username=user.username pk=mood.id %}><img
@@ -27,7 +27,7 @@
                 <h2>Heat<a style="margin-left: 10px"
                            href={% url 'profileapp:create-heat' username=user.username pk=pet.id %}><img
                         src="{% static 'plus.png' %}" alt="to mark heat" width="40px"></a></h2>
-                {% for heat in heats %}
+                {% for heat in pet.heat_set.all %}
                     <ul>
                         <li>{{ heat.soreness }} at {{ heat.data }}<a style="margin-left: 10px"
                                                                      href={% url 'profileapp:delete-heat' username=user.username pk=heat.id %}><img
@@ -40,7 +40,7 @@
                 <h2>Treatment<a style="margin-left: 10px"
                                 href={% url 'profileapp:create-treatment' username=user.username pk=pet.id %}><img
                         src="{% static 'plus.png' %}" alt="to mark treatment" width="40px"></a></h2>
-                {% for treatment in treatments %}
+                {% for treatment in pet.treatment_set.all %}
                     <ul>
                         <li>{{ treatment.name }} at {{ treatment.data }} and next data {{ treatment.data_next }}<a
                                 style="margin-left: 10px"
@@ -54,6 +54,11 @@
         <br><br><br>
         <a href={% url 'profileapp:pet-details' username=user.username pk=pet.id %}>back to {{ pet.name }}`s
             profile</a>
-    <br><br><br><a href={% url 'profileapp:export-dairy' username=user.username pk=pet.id %}>EXPORT PDF</a>
+        <br><br><br>
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-primary">
+                <a class="butt" href={% url 'profileapp:export-dairy' username=user.username pk=pet.id %}>EXPORT PDF</a>
+            </button>
+        </div>
     </div>
 {% endblock %}

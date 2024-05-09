@@ -1,3 +1,6 @@
+import datetime
+from datetime import timedelta
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -16,8 +19,15 @@ class HelloView(View):
     """
 
     def get(self, request: HttpRequest) -> HttpResponse:
+        now = datetime.date.today()
+        notifications = []
+        if request.user.is_authenticated and request.user.pet_set:
+            for pet in request.user.pet_set.all():
+                for treatment in pet.treatment_set.all():
+                    if treatment.data_next - now < timedelta(7):
+                        notifications.append(f"Warning: {treatment.data_next}, it's time to apply {treatment.name}")
         context = {
-            "user": self.request.user,
+            "notifications": notifications,
         }
         return render(request, 'functionalapp/hello.html', context=context)
 
@@ -29,20 +39,16 @@ class СalorieСalculatorView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         form = Calculator()
-        user = self.request.user
         context = {
-            "pets": Pet.objects.filter(owner__username=user.username),
-            "user": user,
+            "pets": Pet.objects.filter(owner__username=self.request.user.username),
             "form": form,
         }
         return render(request, 'functionalapp/calories.html', context=context)
 
     def post(self, request, *args, **kwargs):
         form = Calculator(request.POST)
-        user = self.request.user
         context = {
-            "pets": Pet.objects.filter(owner__username=user.username),
-            "user": user,
+            "pets": Pet.objects.filter(owner__username=self.request.user.username),
             "form": form,
         }
         if form.is_valid():
@@ -117,14 +123,10 @@ class QuestionDetailsView(View):
     def get(self, request, *args, **kwargs):
         question = get_object_or_404(Question, pk=self.kwargs['pk'])
         form = AnswerForm()
-        answers = Answer.objects.filter(question=question)
-        answers_of_user = answers.filter(author=self.request.user)
         context = {
             "question": question,
             "form": form,
-            "answers": answers,
             'permission': self.request.user.is_staff or self.request.user.pk == question.author.id,
-            'answers_of_user': answers_of_user
         }
 
         return render(request, 'functionalapp/question_details.html', context=context)
@@ -140,11 +142,9 @@ class QuestionDetailsView(View):
             answer.save()
             return redirect('functionalapp:question-list')
         else:
-            answers = Answer.objects.filter(question=question)
             context = {
                 'question': question,
                 'form': form,
-                'answers': answers,
                 'permission': self.request.user.is_staff or self.request.user.pk == question.author.id
             }
             return render(request, 'functionalapp/question_details.html', context=context)
@@ -196,5 +196,4 @@ class AnswerDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         answer = get_object_or_404(Answer, pk=self.kwargs['pk'])
-        question = get_object_or_404(Question, pk=answer.question.pk)
-        return reverse_lazy("functionalapp:question-details", kwargs={'pk': question.pk})
+        return reverse_lazy("functionalapp:question-details", kwargs={'pk': answer.question.pk})

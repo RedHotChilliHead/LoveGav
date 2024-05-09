@@ -117,6 +117,11 @@
             border-radius: 5px; /* Закругление углов */
         }
 
+        .butt {
+            text-decoration: none;
+            color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -132,7 +137,7 @@
                 <a class="links" href={% url 'functionalapp:calculator' %}>Calculator</a>
                 <a class="links" href={% url 'functionalapp:playground-list' %}>Playgrounds</a>
                 <a class="links" href={% url 'functionalapp:question-list' %}>Questions</a>
-                {% if user.username %}
+                {% if user.is_authenticated %}
                     <a class="links" href={% url 'blogapp:public-user-details' username=user.username %}>Blog</a>
                 {% endif %}
             </div>

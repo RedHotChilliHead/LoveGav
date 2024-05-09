@@ -6,6 +6,13 @@
 
 {% block body %}
     <div class="fixed-container">
+        <div>
+            {% if notifications %}
+                {% for notification in notifications %}
+                    <p>{{ notification }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
         <h1>Navigation for {{ user.username }}</h1>
         <div>
             <a href={% url 'profileapp:register' %}>Register</a>

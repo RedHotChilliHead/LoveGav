@@ -23,10 +23,10 @@
         <span style="color: grey"> at {{ post.data }}</span></p>
         <br>
 
-        {% if comments %}
+        {% if post.comment_set %}
             <h2>Comments</h2>
             <ul class="list-group list-group-flush">
-                {% for comment in comments %}
+                {% for comment in post.comment_set.all %}
                     <li class="list-group-item">
                         <div class="mini-section">
                             <section>
@@ -47,7 +47,7 @@
                                 <p>{{ comment.body }}</p>
                             </section>
                         <section>
-                            {% if comment in comments_of_user or user.is_staff %}
+                            {% if comment.author == user or user.is_staff %}
                                 <a class="mini-links"
                                    href={% url 'blogapp:comment-delete' pk=comment.pk username=comment.post.author.username %}>delete</a>
                             {% endif %}

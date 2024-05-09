@@ -1,7 +1,7 @@
 {% extends "functionalapp/base.html" %}
 
 {% block title %}
-    {{ user.username }}
+    {{ user_author.username }}
 {% endblock %}
 
 {% block body %}
@@ -9,12 +9,12 @@
     <div class="fixed-container">
         <div class="section-main">
             <section>
-                <h1>{{ user.username }}<a style="padding-left: 10px"
-                                          href={% url 'blogapp:create-post' username=user.username %}><img
+                <h1>{{ user_author.username }}<a style="padding-left: 10px"
+                                          href={% url 'blogapp:create-post' username=user_author.username %}><img
                         src="{% static 'plus.png' %}" alt="add post" width="40px"></a></h1>
                 <br>
-                <p>Date of birth: {{ user.profile.birth }}</p>
-                <p>Bio: {{ user.profile.bio }}</p>
+                <p>Date of birth: {{ user_author.profile.birth }}</p>
+                <p>Bio: {{ user_author.profile.bio }}</p>
             </section>
             <section>
                 <br>
@@ -25,9 +25,9 @@
                 </div>
             </section>
         </div>
-        {% if posts %}
+        {% if user_author.post_set %}
             <div class="post-container">
-                {% for post in posts %}
+                {% for post in user_author.post_set.all %}
                     <section class="photo">
                         <img src="{{ post.photo.url }}" alt="photo">
                         <p>{{ post.description }}</p>
@@ -35,13 +35,13 @@
                         {% if post.comment_set.count > 0 %}
                             <span>
                                 <a class="mini-links"
-                                   href={% url 'blogapp:detail-post' username=user.username pk=post.pk %}>
+                                   href={% url 'blogapp:detail-post' username=user_author.username pk=post.pk %}>
                                     {{ post.comment_set.count }} comments</a>
                                 </span>
                         {% else %}
                             <span>
                                 <a class="mini-links"
-                                   href={% url 'blogapp:detail-post' username=user.username pk=post.pk %}>comment on</a>
+                                   href={% url 'blogapp:detail-post' username=user_author.username pk=post.pk %}>comment on</a>
                                 </span>
                         {% endif %}
                     </section>

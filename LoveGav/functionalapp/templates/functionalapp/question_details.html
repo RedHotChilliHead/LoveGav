@@ -25,10 +25,10 @@
         {% endif %}
         <br>
 
-        {% if answers %}
+        {% if question.answer_set %}
             <h2>Answers</h2>
             <ul class="list-group list-group-flush">
-                {% for answer in answers %}
+                {% for answer in question.answer_set.all %}
                     <li class="list-group-item">
                         <div class="mini-section">
                             <section>
@@ -49,7 +49,7 @@
                                 <p>{{ answer.body }}</p>
                             </section>
                         <section>
-                            {% if answer in answers_of_user or user.is_staff %}
+                            {% if answer.author == user or user.is_staff %}
                                 <a class="mini-links"
                                    href={% url 'functionalapp:answer-delete' pk=answer.pk %}>delete</a>
                             {% endif %}

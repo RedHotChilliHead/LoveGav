@@ -156,7 +156,7 @@ class PetDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
 
         try:
             context["treatment"] = Treatment.objects.filter(pet=self.object).latest('data')
-        except Heat.DoesNotExist:
+        except Treatment.DoesNotExist:
             context["treatment"] = None
 
         return context
@@ -333,25 +333,6 @@ class DairyDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     model = Pet
     template_name = 'profileapp/dairy.html'
     context_object_name = 'pet'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        try:
-            context["moods"] = Mood.objects.filter(pet=self.object)
-        except Mood.DoesNotExist:
-            context["mood"] = None
-
-        try:
-            context["heats"] = Heat.objects.filter(pet=self.object)
-        except Heat.DoesNotExist:
-            context["heat"] = None
-
-        try:
-            context["treatments"] = Treatment.objects.filter(pet=self.object)
-        except Heat.DoesNotExist:
-            context["treatment"] = None
-
-        return context
 
 
 class DairyPetDataExportView(UserPassesTestMixin, LoginRequiredMixin, View):
