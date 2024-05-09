@@ -7,11 +7,15 @@
 {% block body %}
     {% load static %}
     <div class="fixed-container">
-        <h1>Questions</h1>
-        <a href={% url 'functionalapp:question-create' %}><h3>Ask a question</h3></a>
+        <div class="d-grid gap-2 d-md-block"><h1>Questions
+            <button type="button" class="btn btn-primary">
+                <a class="butt" href={% url 'functionalapp:question-create' %}>Ask a question</a>
+            </button>
+        </h1>
+        </div>
+    <br>
         <ul class="list-group list-group-flush">
             {% for object in object_list %}
-
                 <li class="list-group-item">
                     <div class="mini-section">
                         <section>
@@ -48,7 +52,6 @@
                             {% endif %}
                             <br>
                         </section>
-
                     </div>
                 </li>
             {% endfor %}

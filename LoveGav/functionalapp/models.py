@@ -25,6 +25,8 @@ def answers_photo_path(instance: "Answer", filename: str) -> str:
 
 
 class Playground(models.Model):
+    class Meta:
+        ordering = ["town"]
     town = models.CharField(max_length=100, blank=False)
     address = models.TextField(max_length=150, blank=False)
     description = models.CharField(max_length=200, null=False, blank=True)
