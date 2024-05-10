@@ -11,7 +11,6 @@ from django.contrib.auth.forms import UserCreationForm
 from profileapp.models import Profile, Pet, Mood, Heat, Treatment
 from fpdf import FPDF
 
-
 class RegisterView(CreateView):  # форма регистрации пользователя
     """
     Создать пользователя

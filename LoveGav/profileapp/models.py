@@ -20,7 +20,7 @@ def pet_files_path(instance: "Pet", filename: str) -> str:
 
 class Profile(models.Model):
     user = OneToOneField(User,
-                         on_delete=models.CASCADE)  # если user удален, удалить всю модель. благодаря этой связи можно обращаться по .profile
+                         on_delete=models.CASCADE, blank=True, null=True)  # если user удален, удалить всю модель. благодаря этой связи можно обращаться по .profile
     bio = models.TextField(max_length=500, blank=True)
     email = models.EmailField(max_length=254, blank=True)
     birth = models.DateField(blank=True, null=True)

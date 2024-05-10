@@ -6,6 +6,8 @@ from .views import RegisterPetView, PetDetaislView, UpdatePetView, DeletePetView
 from .views import CreateMoodView, DeleteMoodView, CreateHeatView, DeleteHeatView, CreateTreatmentView, \
     DeleteTreatmentView, DairyDetaislView, DairyPetDataExportView
 
+from .api_views import users_list, UserDetailView
+
 app_name = "profileapp"
 
 urlpatterns = [
@@ -35,4 +37,7 @@ urlpatterns = [
     path('<str:username>/<int:pk>_treatment/delete/', DeleteTreatmentView.as_view(), name='delete-treatment'),
 
     path('<str:username>/<int:pk>_pet/export/', DairyPetDataExportView.as_view(), name='export-dairy'),
+
+    path('api/users/', users_list),
+    path('api/users/<int:pk>/', UserDetailView.as_view()),
 ]
