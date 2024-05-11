@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from .models import User
+from .permissions import IsOwnerOrStaffReadOnly
 from .serializers import UserSerializer
 
 
@@ -29,7 +30,7 @@ class UserDetailView(APIView):
     """
     Create, update, delete и detail для конкретного пользователя
     """
-
+    permission_classes = (IsOwnerOrStaffReadOnly,)
     def get(self, request, pk):
         user = User.objects.get(pk=pk)
         serializer = UserSerializer(user)
