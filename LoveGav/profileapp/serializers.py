@@ -20,3 +20,14 @@ class UserSerializer(serializers.ModelSerializer):
         if profile_data:
             Profile.objects.create(user=user, **profile_data)  # Создаем профиль для пользователя
         return user
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile', None)
+        instance.username = validated_data.get('username', instance.username)
+        instance.password = validated_data.get('password', instance.password)
+        instance.profile.email = profile_data.get('email', instance.profile.email)
+        instance.profile.bio = profile_data.get('bio', instance.profile.bio)
+        instance.profile.birth = profile_data.get('birth', instance.profile.birth)
+        instance.profile.save()
+        instance.save()
+        return instance

@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .models import User, Profile
-from .serializers import UserSerializer, ProfileSerializer
+from .models import User
+from .serializers import UserSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -27,10 +27,26 @@ def users_list(request):
 
 class UserDetailView(APIView):
     """
-    Просмотр информации о конкретном пользователе
+    Create, update, delete и detail для конкретного пользователя
     """
 
     def get(self, request, pk):
         user = User.objects.get(pk=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+    def post(self, request, pk):
+        user = User.objects.get(pk=pk)
+        serializer = UserSerializer(instance=user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # Вызываем метод update() в UserSerializer для редактирования профиля
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except user.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
