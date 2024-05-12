@@ -6,9 +6,9 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import OrderingFilter
 
-from .models import User, Pet, Mood
+from .models import User, Pet, Mood, Heat
 from .permissions import IsOwnerOrStaffReadOnly
-from .serializers import UserSerializer, PetSerializer, MoodSerializer
+from .serializers import UserSerializer, PetSerializer, MoodSerializer, HeatSerializer
 
 
 
@@ -89,6 +89,26 @@ class MoodViewSet(ModelViewSet):
     serializer_class = MoodSerializer
     permission_classes = (IsAuthenticated,)
     lookup_url_kwarg = 'mood_pk'
+
+    filter_backends = [OrderingFilter]
+    ordering_fields = [
+        "data",
+    ]
+
+class HeatViewSet(ModelViewSet):
+    """
+    Набор представлений для действий над Heat.
+
+    Полный CRUD для настроения питомцев
+    """
+
+    def get_queryset(self):
+        pet = Pet.objects.get(pk=self.kwargs['pk'])
+        return Heat.objects.filter(pet=pet)
+
+    serializer_class = HeatSerializer
+    permission_classes = (IsAuthenticated,)
+    lookup_url_kwarg = 'heat_pk'
 
     filter_backends = [OrderingFilter]
     ordering_fields = [
