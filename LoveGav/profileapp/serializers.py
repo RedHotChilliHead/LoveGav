@@ -1,5 +1,6 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from .models import Profile, Pet
+from .models import Profile, Pet, Mood
 from django.contrib.auth.models import User
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -39,3 +40,17 @@ class PetSerializer(serializers.ModelSerializer):
         model = Pet
         fields = '__all__'
         read_only_fields = ('owner',)
+
+class MoodSerializer(serializers.ModelSerializer):
+    pet = serializers.PrimaryKeyRelatedField(
+        queryset=Pet.objects.all(),
+        default=None
+    )
+
+    def validate_pet(self, value):
+        pet_id = self.context['view'].kwargs['pk']
+        return get_object_or_404(Pet, pk=pet_id)
+    class Meta:
+        model = Mood
+        fields = '__all__'
+        read_only_fields = ('pet',)
