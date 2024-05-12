@@ -2,6 +2,7 @@ from django.urls import path
 from .views import HelloView
 from .views import СalorieСalculatorView, DogPlaygroundsView, QuestionListView, CreateQuestionView, QuestionDetailsView, \
     QuestionUpdateView, QuestionDeleteView, AnswerDeleteView
+from .api_views import PlaygroundListView
 
 app_name = "functionalapp"
 
@@ -15,4 +16,6 @@ urlpatterns = [
     path('questions/<int:pk>/update/', QuestionUpdateView.as_view(), name="question-update"),
     path('questions/<int:pk>/delete/', QuestionDeleteView.as_view(), name="question-delete"),
     path('answers/<int:pk>/delete/', AnswerDeleteView.as_view(), name="answer-delete"),
+
+    path('api/playgrounds/', PlaygroundListView.as_view()),
 ]
