@@ -1,10 +1,15 @@
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .models import User
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import OrderingFilter
+
+from .models import User, Pet
 from .permissions import IsOwnerOrStaffReadOnly
-from .serializers import UserSerializer
+from .serializers import UserSerializer, PetSerializer
+
 
 
 @api_view(['GET', 'POST'])
@@ -51,3 +56,21 @@ class UserDetailView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except user.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+class PetViewSet(ModelViewSet):
+    """
+    Набор представлений для действий над Pet.
+
+    Полный CRUD для сущностей питомцев
+    """
+
+    def get_queryset(self):
+        return self.request.user.pet_set.all()
+
+    serializer_class = PetSerializer
+    permission_classes = (IsAuthenticated,)
+
+    filter_backends = [OrderingFilter]
+    ordering_fields = [
+        "name",
+    ]

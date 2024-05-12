@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from django.contrib.auth.views import LoginView
 
 from .views import RegisterView, logout_view, UpdateMeView, UserDetaislView, DeleteUserView
@@ -6,9 +7,12 @@ from .views import RegisterPetView, PetDetaislView, UpdatePetView, DeletePetView
 from .views import CreateMoodView, DeleteMoodView, CreateHeatView, DeleteHeatView, CreateTreatmentView, \
     DeleteTreatmentView, DairyDetaislView, DairyPetDataExportView
 
-from .api_views import users_list, UserDetailView
+from .api_views import users_list, UserDetailView, PetViewSet
 
 app_name = "profileapp"
+
+routers = DefaultRouter()
+routers.register("pets", PetViewSet, basename='pet')
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -38,6 +42,8 @@ urlpatterns = [
 
     path('<str:username>/<int:pk>_pet/export/', DairyPetDataExportView.as_view(), name='export-dairy'),
 
+    path('api/', include(routers.urls)),
     path('api/users/', users_list),
     path('api/users/<int:pk>/', UserDetailView.as_view()),
+
 ]

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile
+from .models import Profile, Pet
 from django.contrib.auth.models import User
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -31,3 +31,11 @@ class UserSerializer(serializers.ModelSerializer):
         instance.profile.save()
         instance.save()
         return instance
+
+class PetSerializer(serializers.ModelSerializer):
+    #поле owner скрыто и заполняется данными текущего пользователя
+    owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = Pet
+        fields = '__all__'
+        read_only_fields = ('owner',)
