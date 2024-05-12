@@ -7,7 +7,7 @@ from .views import RegisterPetView, PetDetaislView, UpdatePetView, DeletePetView
 from .views import CreateMoodView, DeleteMoodView, CreateHeatView, DeleteHeatView, CreateTreatmentView, \
     DeleteTreatmentView, DairyDetaislView, DairyPetDataExportView
 
-from .api_views import users_list, UserDetailView, PetViewSet, MoodViewSet, HeatViewSet
+from .api_views import users_list, UserDetailView, PetViewSet, MoodViewSet, HeatViewSet, TreatmentViewSet
 
 app_name = "profileapp"
 
@@ -15,6 +15,7 @@ routers = DefaultRouter()
 routers.register("pets", PetViewSet, basename='pet')
 routers.register("moods", MoodViewSet, basename='mood')
 routers.register("heats", HeatViewSet, basename='heat')
+routers.register("treatments", TreatmentViewSet, basename='treatment')
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -59,6 +60,13 @@ urlpatterns = [
         'put': 'update',
         'delete': 'destroy',
     }), name='heat-detail'),
+    path('api/pets/<int:pk>/treatments/', TreatmentViewSet.as_view({'get': 'list',
+                                                          'post': 'create'})),
+    path('api/pets/<int:pk>/treatments/<int:treatment_pk>/', TreatmentViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'delete': 'destroy',
+    }), name='treatment-detail'),
 
     path('api/users/', users_list),
     path('api/users/<int:pk>/', UserDetailView.as_view()),
