@@ -3,10 +3,11 @@ from rest_framework.routers import DefaultRouter
 
 from .views import UserPublicDetaislView, CreatePostView, PostDetaislView, PostUpdateView, PostDeleteView, \
     CommentDeleteView
-from .api_views import PostViewSet
+from .api_views import PostViewSet, CommentViewSet
 
 routers = DefaultRouter()
 routers.register("posts", PostViewSet, basename='post')
+routers.register("comments", CommentViewSet, basename='comment')
 
 app_name = "blogapp"
 
@@ -19,4 +20,11 @@ urlpatterns = [
     path('<str:username>/comments/<int:pk>/delete/', CommentDeleteView.as_view(), name="comment-delete"),
 
     path('api/', include(routers.urls)),
+    path('api/posts/<int:pk>/comments/', CommentViewSet.as_view({'get': 'list',
+                                                          'post': 'create'})),
+    path('api/posts/<int:pk>/comments/<int:comment_pk>/', CommentViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'delete': 'destroy',
+    }), name='comment-detail'),
 ]
