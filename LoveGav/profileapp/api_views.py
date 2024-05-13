@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -89,8 +90,12 @@ class MoodViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     lookup_url_kwarg = 'mood_pk'
 
-    filter_backends = [OrderingFilter]
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
     ordering_fields = [
+        "data",
+    ]
+    filterset_fields = [
+        "mood_day",
         "data",
     ]
 
@@ -109,8 +114,12 @@ class HeatViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     lookup_url_kwarg = 'heat_pk'
 
-    filter_backends = [OrderingFilter]
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
     ordering_fields = [
+        "data",
+    ]
+    filterset_fields = [
+        "soreness",
         "data",
     ]
 
@@ -129,7 +138,12 @@ class TreatmentViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     lookup_url_kwarg = 'treatment_pk'
 
-    filter_backends = [OrderingFilter]
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
     ordering_fields = [
         "data",
+    ]
+    filterset_fields = [
+        "name",
+        "data",
+        "data_next",
     ]

@@ -1,10 +1,16 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
 from .views import HelloView
 from .views import СalorieСalculatorView, DogPlaygroundsView, QuestionListView, CreateQuestionView, QuestionDetailsView, \
     QuestionUpdateView, QuestionDeleteView, AnswerDeleteView
-from .api_views import PlaygroundListView
+from .api_views import PlaygroundListView, QuestionViewSet, AnswerViewSet
 
 app_name = "functionalapp"
+
+routers = DefaultRouter()
+routers.register("questions", QuestionViewSet, basename='question')
+routers.register("answers", AnswerViewSet, basename='answer')
 
 urlpatterns = [
     path('hello/', HelloView.as_view(), name='hello'),
@@ -17,5 +23,13 @@ urlpatterns = [
     path('questions/<int:pk>/delete/', QuestionDeleteView.as_view(), name="question-delete"),
     path('answers/<int:pk>/delete/', AnswerDeleteView.as_view(), name="answer-delete"),
 
+    path('api/', include(routers.urls)),
     path('api/playgrounds/', PlaygroundListView.as_view()),
+    path('api/questions/<int:pk>/answers/', AnswerViewSet.as_view({'get': 'list',
+                                                                 'post': 'create'})),
+    path('api/questions/<int:pk>/answers/<int:answer_pk>/', AnswerViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'delete': 'destroy',
+    }), name='answer-detail'),
 ]
