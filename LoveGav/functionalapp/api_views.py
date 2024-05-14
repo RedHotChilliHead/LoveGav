@@ -1,13 +1,16 @@
-from rest_framework import status
+from rest_framework import status, serializers
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from blogapp.permissions import IsAuthorOrReadOnly
 from functionalapp.models import Playground, Question, Answer
-from functionalapp.serializers import PlaygroundSerializer, QuestionSerializer, AnswerSerializer
+from functionalapp.serializers import PlaygroundSerializer, QuestionSerializer, AnswerSerializer, PetSerializer
+from profileapp.models import Pet
 
 
 class PlaygroundListView(ListAPIView):
@@ -23,6 +26,7 @@ class PlaygroundListView(ListAPIView):
         "address",
         "description"
     ]
+
 
 class QuestionViewSet(ModelViewSet):
     """
@@ -58,6 +62,7 @@ class QuestionViewSet(ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class AnswerViewSet(ModelViewSet):
     """
@@ -97,3 +102,75 @@ class AnswerViewSet(ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class СalorieСalculatorApiView(APIView):
+    """
+    Калькулятор калорий
+    Ожидаемые данные для POST-запроса: weight - вес питомца и calorie_content - калорийность корма (ккал/кг)
+    Example:
+    {
+    "weight": 5.5,
+    "calorie_content": 4000,
+    "k1": true
+}
+    """
+    permission_classes = (IsAuthenticated,)
+
+    @staticmethod
+    def calculate_calories_for_pet(weight, calorie_content, kkk):
+        results = {}
+        kkk_dict = {'k1': 1.2,
+                    'k2': 3,
+                    'k3': 0.8,
+                    'k4': 2.4,
+                    'k5': 2,
+                    'k6': 1.6,
+                    'k7': 1.2,
+                    'k8': 1.6,
+                    'k9': 1.6,
+                    'k10': 1.2}
+
+        if weight < 2:
+            result = 2 * (70 * weight ** 0.75)
+        else:
+            result = 2 * (30 * weight + 70)
+
+        count = 1
+        for k in kkk:
+            if k == True:
+                result *= kkk_dict['k' + str(count)]
+            count += 1
+
+        results['calories_per_day'] = result
+
+        one_calorie = 1000 / calorie_content
+        results['grams'] = result * one_calorie
+
+        return results
+
+    def get(self, request):
+        try:
+            pets = Pet.objects.filter(owner=request.user)
+            context = {
+                "pets": PetSerializer(pets, many=True).data,
+            }
+        except Pet.DoesNotExist:
+            context = {
+                "pets": "You haven't listed any pets yet",
+            }
+
+        return Response(context)
+
+    def post(self, request):
+        data = request.data
+        weight = data.get('weight')
+        calorie_content = data.get('calorie_content')
+        kkk = [data.get('k' + str(i)) for i in range(1, 11)]
+
+        if weight is None or calorie_content is None:
+            return Response({"error": "Weight and calorie content are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        results = self.calculate_calories_for_pet(weight, calorie_content, kkk)
+
+        return Response(results, status=status.HTTP_200_OK)

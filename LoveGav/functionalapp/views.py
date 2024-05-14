@@ -34,7 +34,7 @@ class HelloView(View):
 
 class СalorieСalculatorView(LoginRequiredMixin, View):
     """
-    Калькулятор каллорий
+    Калькулятор калорий
     """
 
     def get(self, request, *args, **kwargs):

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Playground
+from .models import Playground, Question, Answer
+
 
 @admin.register(Playground)
 class PlaygroundAdmin(admin.ModelAdmin):
@@ -11,3 +12,25 @@ class PlaygroundAdmin(admin.ModelAdmin):
         if len(obj.description) < 48:
             return obj.description
         return obj.description[:48] + "..."
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    ordering = ('pk',)  # сортировка
+    list_display = "pk", "head", "body", "data", "author"
+    list_display_links = "pk", "head", "body", "data", "author"
+    search_fields = ("head", "body", "data", "author")
+    def description_short(self, obj: Question) -> str:  # вывод короткого описания
+        if len(obj.body) < 48:
+            return obj.body
+        return obj.body[:48] + "..."
+
+@admin.register(Answer)
+class AnswerAdmin(admin.ModelAdmin):
+    ordering = ('pk',)  # сортировка
+    list_display = "pk", "question", "body", "data", "author"
+    list_display_links = "pk", "question", "body", "data", "author"
+    search_fields = ("question", "body", "data", "author")
+    def description_short(self, obj: Answer) -> str:  # вывод короткого описания
+        if len(obj.body) < 48:
+            return obj.body
+        return obj.body[:48] + "..."

@@ -27,6 +27,9 @@ class Profile(models.Model):
     birth = models.DateField(blank=True, null=True)
     avatar = models.ImageField(null=True, upload_to=profile_avatar_directory_path)
 
+    def __str__(self) -> str:
+        return f"({self.user.username})"
+
 
 class Pet(models.Model):
     class Meta:
@@ -75,11 +78,17 @@ class Mood(models.Model):
     )
     data = models.DateField(blank=False, null=False)
 
+    def __str__(self) -> str:
+        return f"({self.mood_day})"
+
 
 class Heat(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
     soreness = models.CharField(max_length=50, blank=True, null=True)
     data = models.DateField(blank=False, null=False)
+
+    def __str__(self) -> str:
+        return f"({self.soreness})"
 
 
 class Treatment(models.Model):
@@ -87,3 +96,6 @@ class Treatment(models.Model):
     name = models.CharField(max_length=150, blank=False, null=False)
     data = models.DateField(blank=False, null=False)
     data_next = models.DateField(blank=False, null=False)
+
+    def __str__(self) -> str:
+        return f"({self.name})"

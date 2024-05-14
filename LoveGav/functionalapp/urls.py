@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import HelloView
 from .views import СalorieСalculatorView, DogPlaygroundsView, QuestionListView, CreateQuestionView, QuestionDetailsView, \
     QuestionUpdateView, QuestionDeleteView, AnswerDeleteView
-from .api_views import PlaygroundListView, QuestionViewSet, AnswerViewSet
+from .api_views import PlaygroundListView, QuestionViewSet, AnswerViewSet, СalorieСalculatorApiView
 
 app_name = "functionalapp"
 
@@ -26,10 +26,11 @@ urlpatterns = [
     path('api/', include(routers.urls)),
     path('api/playgrounds/', PlaygroundListView.as_view()),
     path('api/questions/<int:pk>/answers/', AnswerViewSet.as_view({'get': 'list',
-                                                                 'post': 'create'})),
+                                                                   'post': 'create'})),
     path('api/questions/<int:pk>/answers/<int:answer_pk>/', AnswerViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',
         'delete': 'destroy',
     }), name='answer-detail'),
+    path('api/calculate-calories/', СalorieСalculatorApiView.as_view(), name='calculate_calories'),
 ]

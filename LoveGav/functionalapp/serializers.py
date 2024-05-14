@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+
+from profileapp.models import Pet
 from .models import Playground, Question, Answer
 
 
@@ -27,3 +29,8 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = Answer
         fields = '__all__'
         read_only_fields = ('question', 'author')
+
+class PetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pet
+        fields = ('name', 'weight')

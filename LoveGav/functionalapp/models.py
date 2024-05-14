@@ -43,6 +43,8 @@ class Question(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     photo = models.ImageField(null=True, upload_to=questions_photo_path, blank=True)
     # answers = models.ForeignKey(Answer, on_delete=models.CASCADE, blank=True, null=True)  # связь с таблицей ответов
+    def __str__(self) -> str:
+        return f"({self.head})"
 
 
 class Answer(models.Model):
@@ -51,3 +53,6 @@ class Answer(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     photo = models.ImageField(null=True, upload_to=answers_photo_path, blank=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)  # связь с таблицей вопросов
+    def __str__(self) -> str:
+        return f"({self.body[:15]}...)"
+
