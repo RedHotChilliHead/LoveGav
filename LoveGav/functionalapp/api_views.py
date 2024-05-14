@@ -32,7 +32,7 @@ class QuestionViewSet(ModelViewSet):
     """
     Набор представлений для действий над Question.
 
-    Полный CRUD для сущностей вопросов
+    Полный CRUD для сущностей вопросов пользователей
     """
 
     queryset = Question.objects.all()
@@ -68,7 +68,7 @@ class AnswerViewSet(ModelViewSet):
     """
     Набор представлений для действий над Answer.
 
-    Полный CRUD для сущностей постов
+    Полный CRUD для сущностей ответов на вопросы пользователей
     """
 
     def get_queryset(self):
@@ -106,14 +106,27 @@ class AnswerViewSet(ModelViewSet):
 
 class СalorieСalculatorApiView(APIView):
     """
-    Калькулятор калорий
-    Ожидаемые данные для POST-запроса: weight - вес питомца и calorie_content - калорийность корма (ккал/кг)
-    Example:
+    Представление для расчета калорий
+    Ожидаемые данные для POST-запроса:
+    - weight - вес питомца;
+    - calorie_content - калорийность корма (ккал/кг);
+    - коэффициенты активности (true/false):
+        k1 - Light physical activity;
+        k2 - Hard work;
+        k3 - Without physical activity;
+        k4 - Feeds the puppies;
+        k5 - Just born (0-3 months);
+        k6 - Large breed puppy (3-9 months old);
+        k7 - Large breed puppy (9-24 months old);
+        k8 - Puppy of medium and small breeds (3-6 months);
+        k9 - Puppy of medium and small breeds (3-6 months);
+        k10 - Puppy of medium and small breeds (6-12 months).
+    Пример:
     {
     "weight": 5.5,
     "calorie_content": 4000,
     "k1": true
-}
+    }
     """
     permission_classes = (IsAuthenticated,)
 

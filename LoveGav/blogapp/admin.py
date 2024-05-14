@@ -4,6 +4,9 @@ from .models import Post, Comment
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Post - постов
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "description", "data", "author"
     list_display_links = "pk", "description", "data", "author"
@@ -14,8 +17,12 @@ class PostAdmin(admin.ModelAdmin):
             return obj.description
         return obj.description[:48] + "..."
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Comment - комментариев к посту
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "post", "body", "data", "author"
     list_display_links = "pk", "post", "body", "data", "author"

@@ -19,6 +19,9 @@ def pet_files_path(instance: "Pet", filename: str) -> str:
 
 
 class Profile(models.Model):
+    """
+    Модель профиля пользователя
+    """
     user = OneToOneField(User,
                          on_delete=models.CASCADE, blank=True,
                          null=True)  # если user удален, удалить всю модель. благодаря этой связи можно обращаться по .profile
@@ -32,6 +35,9 @@ class Profile(models.Model):
 
 
 class Pet(models.Model):
+    """
+    Модель питомца
+    """
     class Meta:
         ordering = ["name"]
 
@@ -62,6 +68,9 @@ class Pet(models.Model):
 
 
 class Mood(models.Model):
+    """
+    Модель настроения питомца для ведения дневника
+    """
     MOOD_CHOICES = {
         'slug': "sluggish",
         'rest': "restless",
@@ -83,6 +92,9 @@ class Mood(models.Model):
 
 
 class Heat(models.Model):
+    """
+    Модель течки питомца для ведения дневника
+    """
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
     soreness = models.CharField(max_length=50, blank=True, null=True)
     data = models.DateField(blank=False, null=False)
@@ -92,6 +104,9 @@ class Heat(models.Model):
 
 
 class Treatment(models.Model):
+    """
+    Модель записи обработки питомца, принятия лекарств для ведения дневника
+    """
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
     name = models.CharField(max_length=150, blank=False, null=False)
     data = models.DateField(blank=False, null=False)

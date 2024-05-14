@@ -8,6 +8,9 @@ def posts_photo_path(instance: "Post", filename: str) -> str:
     )
 
 class Post(models.Model):
+    """
+    Модель поста пользователя
+    """
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField(max_length=300, blank=True)
     data = models.DateTimeField(auto_now=True)
@@ -16,6 +19,9 @@ class Post(models.Model):
         return f"({self.description[:15]}...)"
 
 class Comment(models.Model):
+    """
+    Модель комментария к посту
+    """
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     body = models.TextField(max_length=150, blank=True)
     data = models.DateTimeField(auto_now=True)

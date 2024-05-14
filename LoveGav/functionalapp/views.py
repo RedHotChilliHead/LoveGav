@@ -15,7 +15,7 @@ from django.http import HttpRequest, HttpResponse
 
 class HelloView(View):
     """
-    Домашняя страница-заглушка
+    Представление для отображения домашней страницы-заглушки
     """
 
     def get(self, request: HttpRequest) -> HttpResponse:
@@ -34,7 +34,7 @@ class HelloView(View):
 
 class СalorieСalculatorView(LoginRequiredMixin, View):
     """
-    Калькулятор калорий
+    Представление для расчета необходимых калорий и количества корма в день
     """
 
     def get(self, request, *args, **kwargs):
@@ -83,7 +83,7 @@ class СalorieСalculatorView(LoginRequiredMixin, View):
 
 class DogPlaygroundsView(ListView):
     """
-    Отображение списка собачьих площадок
+    Представление для отображения списка собачьих площадок
     """
     model = Playground
     template_name = "functionalapp/playgrounds.html"
@@ -92,7 +92,7 @@ class DogPlaygroundsView(ListView):
 
 class CreateQuestionView(LoginRequiredMixin, CreateView):
     """
-    Задать вопрос
+    Представление для создания вопроса
     """
     model = Question
     fields = "head", "body", "photo"
@@ -109,7 +109,7 @@ class CreateQuestionView(LoginRequiredMixin, CreateView):
 
 class QuestionListView(ListView):
     """
-    Отобразить список вопросов
+    Представление для отображения списка вопросов
     """
     model = Question
     template_name = 'functionalapp/question_list.html'
@@ -117,7 +117,7 @@ class QuestionListView(ListView):
 
 class QuestionDetailsView(View):
     """
-    Просмотреть страничку вопроса и ответы на него
+    Представление для просмотра вопроса и ответов на него
     """
 
     def get(self, request, *args, **kwargs):
@@ -151,7 +151,7 @@ class QuestionDetailsView(View):
 
 class QuestionUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
-    Редактировать вопрос
+    Представление для редактирования вопроса
     """
 
     def test_func(self):
@@ -169,7 +169,7 @@ class QuestionUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 
 class QuestionDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
-    Удалить вопрос
+    Представление для удаления вопроса
     """
 
     def test_func(self):
@@ -183,7 +183,7 @@ class QuestionDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
 
 class AnswerDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
-    Удалить ответ
+    Представление для удаления ответа
     """
 
     def test_func(self):

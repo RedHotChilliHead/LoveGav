@@ -18,12 +18,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from drf_spectacular.views import SpectacularSwaggerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('profile/', include('profileapp.urls')),
     path('func/', include('functionalapp.urls')),
     path('blog/', include('blogapp.urls')),
+
+    path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name="swagger"),
 ]
 
 if settings.DEBUG:

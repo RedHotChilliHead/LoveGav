@@ -5,13 +5,18 @@ from blogapp.models import Post, Comment
 
 
 class PostSerializer(serializers.ModelSerializer):
-
+    """
+    Сериализатор записей постов
+    """
     class Meta:
         model = Post
         fields = '__all__'
         read_only_fields = ('author',)
 
 class CommentSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор записей комментариев
+    """
     post = serializers.PrimaryKeyRelatedField(
         queryset=Post.objects.all(),
         default=None

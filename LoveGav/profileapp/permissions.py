@@ -3,7 +3,7 @@ from rest_framework import permissions
 
 class IsOwnerOrStaffReadOnly(permissions.BasePermission):
     """
-    Custom permission to only allow owners of an object to edit it.
+    Пользовательское разрешение, позволяющее редактировать объект только его владельцу или административному персоналу
     """
 
     def has_object_permission(self, request, view, obj):

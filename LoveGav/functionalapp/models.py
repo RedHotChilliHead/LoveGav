@@ -25,6 +25,9 @@ def answers_photo_path(instance: "Answer", filename: str) -> str:
 
 
 class Playground(models.Model):
+    """
+    Модель площадки для выгула собак
+    """
     class Meta:
         ordering = ["town"]
     town = models.CharField(max_length=100, blank=False)
@@ -37,6 +40,9 @@ class Playground(models.Model):
 
 
 class Question(models.Model):
+    """
+    Модель вопроса пользователя
+    """
     head = models.CharField(max_length=100, blank=False)
     body = models.TextField(max_length=500, blank=False)
     data = models.DateTimeField(auto_now=True)
@@ -48,6 +54,9 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
+    """
+    Модель ответа на вопрос пользователя
+    """
     body = models.TextField(max_length=500, blank=False)
     data = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)

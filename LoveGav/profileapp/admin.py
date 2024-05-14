@@ -4,6 +4,9 @@ from .models import Pet, Profile, Mood, Heat, Treatment
 
 @admin.register(Pet)
 class PetAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Pet - питомца
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "name", "breed", "owner", "sex"
     list_display_links = "pk", "name", "breed", "owner", "sex"
@@ -11,6 +14,9 @@ class PetAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Profile - профиля пользователя
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "user", "bio", "email", "birth"
     list_display_links = "pk", "user", "bio", "email", "birth"
@@ -18,6 +24,9 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Mood)
 class MoodAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Mood - настроений питомца
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "pet", "mood_day", "data"
     list_display_links = "pk", "pet", "mood_day", "data"
@@ -25,6 +34,9 @@ class MoodAdmin(admin.ModelAdmin):
 
 @admin.register(Heat)
 class HeatAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Heat - течек питомца
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "pet", "soreness", "data"
     list_display_links = "pk", "pet", "soreness", "data"
@@ -32,6 +44,9 @@ class HeatAdmin(admin.ModelAdmin):
 
 @admin.register(Treatment)
 class TreatmentAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Treatment - обработок питомца, принятия лекарств
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "pet", "name", "data", "data_next"
     list_display_links = "pet", "name", "data", "data_next"

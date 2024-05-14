@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'blogapp.apps.BlogappConfig',
     'rest_framework',
     'django_filters',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -104,6 +105,13 @@ REST_FRAMEWORK = {
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "LoveGav Project API",
+    "DESCRIPTION": "Pet`s dairy, blog and forum",
+    "VERSION": "0.0.1",
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 # Password validation

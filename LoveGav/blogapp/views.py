@@ -12,7 +12,7 @@ from profileapp.models import Profile
 
 class UserPublicDetaislView(LoginRequiredMixin, DetailView):
     """
-    Просмотр публичного профиля владельца
+    Представление для просмотра публичного профиля владельца
     """
 
     model = Profile
@@ -30,7 +30,7 @@ class UserPublicDetaislView(LoginRequiredMixin, DetailView):
 
 class CreatePostView(LoginRequiredMixin, CreateView):
     """
-    Создать пост
+    Представление для создания поста
     """
     model = Post
     fields = "description", "photo"
@@ -46,7 +46,7 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
-    Редактировать пост
+    Представление для редактирования поста
     """
 
     def test_func(self):
@@ -63,7 +63,7 @@ class PostUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 
 class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
-    Удалить пост
+    Представление для удаления поста
     """
 
     def test_func(self):
@@ -79,7 +79,7 @@ class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
 
 class PostDetaislView(LoginRequiredMixin, View):
     """
-    Посмотреть пост и комментарии
+    Представление для просмотра поста и комментариев к ним
     """
 
     def get(self, request, *args, **kwargs):
@@ -112,7 +112,7 @@ class PostDetaislView(LoginRequiredMixin, View):
 
 class CommentDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
-    Удалить ответ
+    Представление для удаления комменатария к посту
     """
 
     def test_func(self):

@@ -6,17 +6,26 @@ from .models import Playground, Question, Answer
 
 
 class PlaygroundSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор записей площадок для выгула собак
+    """
     class Meta:
         model = Playground
         fields = ['town', 'address', 'description', 'photo']
 
 class QuestionSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор записей вопросов пользователей
+    """
     class Meta:
         model = Question
         fields = '__all__'
         read_only_fields = ('author',)
 
 class AnswerSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор записей ответов на вопросы пользователей
+    """
     question = serializers.PrimaryKeyRelatedField(
         queryset=Question.objects.all(),
         default=None
@@ -31,6 +40,9 @@ class AnswerSerializer(serializers.ModelSerializer):
         read_only_fields = ('question', 'author')
 
 class PetSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор записей питомцев для вывода имени и веса питомца
+    """
     class Meta:
         model = Pet
         fields = ('name', 'weight')

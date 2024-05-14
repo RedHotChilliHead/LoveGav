@@ -13,7 +13,7 @@ from fpdf import FPDF
 
 class RegisterView(CreateView):  # форма регистрации пользователя
     """
-    Создать пользователя
+    Представление для регистрации пользователя
     """
     form_class = UserCreationForm  # создать пользователя такого типа
     template_name = 'profileapp/register.html'  # указание шаблона
@@ -34,7 +34,7 @@ class RegisterView(CreateView):  # форма регистрации польз�
 
 class DeleteUserView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
-    Удалить профиль владельца
+    Представление для удаления профиля пользователя
     """
 
     def test_func(self):
@@ -49,7 +49,7 @@ class DeleteUserView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
 
 def logout_view(request: HttpRequest):
     """
-    Выход из аккаунта владельца
+    Представление для выхода из аккаунта пользователя
     """
     logout(request)
     return redirect(reverse("profileapp:login"))  # revers работает только внутри view функций
@@ -57,7 +57,7 @@ def logout_view(request: HttpRequest):
 
 class UpdateMeView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
-    Редактировать профиль владельца
+    Представление для редактирования профиля пользователя
     """
 
     def test_func(self):
@@ -81,7 +81,7 @@ class UpdateMeView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 
 class UserDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     """
-    Просмотр приватного профиля владельца
+    Представление для просмотра приватного профиля пользователя
     """
 
     def test_func(self):

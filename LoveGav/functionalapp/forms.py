@@ -4,6 +4,9 @@ from .models import Answer
 
 
 class Calculator(forms.Form):
+    """
+    Форма ввода параметров для расчета калорий и количества грамм корма в день
+    """
     weight = forms.FloatField(label='Weight (kg)')
     calorie_content = forms.FloatField(label='Сalorie content (kcal/kg)', required=False)
     k1 = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'checkbox-class'}),
@@ -29,6 +32,9 @@ class Calculator(forms.Form):
 
 
 class AnswerForm(ModelForm):
+    """
+    Форма ввода текста ответа на вопрос пользователя
+    """
     class Meta:
         model = Answer
         fields = ["body", "photo"]

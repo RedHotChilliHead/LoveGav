@@ -4,6 +4,9 @@ from .models import Playground, Question, Answer
 
 @admin.register(Playground)
 class PlaygroundAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Playground - собачьих площадок
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "town", "address", "description"
     list_display_links = "pk", "town", "address", "description"
@@ -15,6 +18,9 @@ class PlaygroundAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Question - вопросов пользователей
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "head", "body", "data", "author"
     list_display_links = "pk", "head", "body", "data", "author"
@@ -26,6 +32,9 @@ class QuestionAdmin(admin.ModelAdmin):
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения модели Answer - ответов на вопросы пользователей
+    """
     ordering = ('pk',)  # сортировка
     list_display = "pk", "question", "body", "data", "author"
     list_display_links = "pk", "question", "body", "data", "author"
