@@ -17,15 +17,18 @@ class UserPublicDetaislView(LoginRequiredMixin, DetailView):
 
     model = Profile
     template_name = 'blogapp/public_user_profile.html'
+    context_object_name = 'profile'  # Имя объекта профиля в контексте шаблона
 
     def get_object(self, queryset=None):
-        user = get_object_or_404(User, username=self.kwargs['username'])
-        profile = get_object_or_404(Profile, user=user)
-        return profile
+        return get_object_or_404(Profile.objects.select_related('user'), user__username=self.kwargs['username'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_author'] = self.object.user
+        profile = self.object
+
+        # Предварительная загрузка постов пользователя
+        posts = Post.objects.filter(author=profile.user).prefetch_related('comment_set')
+        context['posts'] = posts
         return context
 
 class CreatePostView(LoginRequiredMixin, CreateView):
@@ -83,7 +86,8 @@ class PostDetaislView(LoginRequiredMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
-        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+
+        post = get_object_or_404(Post.objects.select_related('author'), pk=self.kwargs['pk'])
         form = CommentForm()
         context = {
             "post": post,
@@ -93,7 +97,7 @@ class PostDetaislView(LoginRequiredMixin, View):
         return render(request, 'blogapp/post_details.html', context=context)
 
     def post(self, request, *args, **kwargs):
-        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        post = get_object_or_404(Post.objects.select_related('author'), pk=self.kwargs['pk'])
         form = CommentForm(request.POST, request.FILES)
 
         if form.is_valid():

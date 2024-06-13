@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ekq9!*rr0cd)mb2!f%+jsdwph8%n84fpxe^-q$17&)il25mct1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
 # Application definition
 
@@ -93,7 +93,8 @@ DATABASES = {
         "NAME": "lovegav",
         "USER": "django_admin",
         "PASSWORD": "admin",
-        "HOST": "localhost",
+        # "HOST": "localhost",
+        "HOST": "db",
         "PORT": "5432",
     }
 }
@@ -113,6 +114,30 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "0.0.1",
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+# логирование для SQL-запросов
+# LOGGING = {
+#     'version': 1,
+#     'filters': {
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue',
+#         },
+#     },
+#     'handlers': {
+#         'console':
+#             {
+#                 'level': "DEBUG",
+#                 'filters': ['require_debug_true'],
+#                 'class': 'logging.StreamHandler'
+#             },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

@@ -111,9 +111,14 @@ class QuestionListView(ListView):
     """
     Представление для отображения списка вопросов
     """
-    model = Question
+    # model = Question
     template_name = 'functionalapp/question_list.html'
     paginate = 30
+
+    queryset = (
+        Question.objects
+        .prefetch_related("author").select_related("author__profile").prefetch_related("answer_set")
+    )
 
 class QuestionDetailsView(View):
     """
