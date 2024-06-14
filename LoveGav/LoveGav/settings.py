@@ -93,8 +93,8 @@ DATABASES = {
         "NAME": "lovegav",
         "USER": "django_admin",
         "PASSWORD": "admin",
-        # "HOST": "localhost",
-        "HOST": "db",
+        "HOST": "localhost",
+        # "HOST": "db",
         "PORT": "5432",
     }
 }
@@ -180,5 +180,5 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = reverse_lazy("functionalapp:hello")  # Перейти после аутентификации
+LOGIN_REDIRECT_URL = reverse_lazy("blogapp:posts-list")  # Перейти после аутентификации
 LOGIN_URL = reverse_lazy("profileapp:login")  # перейти для аутентификации

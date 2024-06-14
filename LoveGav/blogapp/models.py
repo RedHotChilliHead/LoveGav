@@ -11,6 +11,8 @@ class Post(models.Model):
     """
     Модель поста пользователя
     """
+    class Meta:
+        ordering = ["-data"]
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField(max_length=300, blank=True)
     data = models.DateTimeField(auto_now=True)

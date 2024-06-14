@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView
 
 from blogapp.forms import CommentForm
 from blogapp.models import Post, Comment
@@ -131,4 +131,23 @@ class CommentDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
         comment = get_object_or_404(Comment, pk=self.kwargs['pk'])
         post = get_object_or_404(Post, pk=comment.post.pk)
         return reverse_lazy("blogapp:detail-post", kwargs={'pk': post.pk, 'username': post.author.username})
+
+class PostListView(ListView):
+    """
+    Представление для отображения ленты постов
+    """
+    template_name = 'blogapp/post_list.html'
+    paginate = 30
+    model = Post
+
+    # queryset = (
+    #     Post.objects
+    #     .prefetch_related("author").select_related("author__profile").prefetch_related("comment_set")
+    # )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['permission'] = True
+        return context
+
 

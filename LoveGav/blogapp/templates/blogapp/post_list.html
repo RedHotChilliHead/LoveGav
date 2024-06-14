@@ -1,0 +1,68 @@
+{% extends "functionalapp/base.html" %}
+
+{% block title %}
+    Lovegav
+{% endblock %}
+
+{% block body %}
+    {% load static %}
+    <div class="fixed-container">
+        {% if permission %}
+            <div class="d-grid gap-2 d-md-block">
+                <h1>Posts
+                    <button type="button" class="btn btn-primary">
+                        <a class="butt" href={% url 'blogapp:create-post' username=user.username %}>Create a post</a>
+                    </button>
+                </h1>
+            </div>
+        {% endif %}
+        <br>
+        <ul class="list-group list-group-flush">
+            {% for object in object_list %}
+                <li class="list-group-item">
+                    <div class="mini-section">
+                        <section>
+                            {% if object.author.profile.avatar %}
+                                <p class="box">
+                                    <a href={% url 'blogapp:public-user-details' username=object.author %}>
+                                        <img src="{{ object.author.profile.avatar.url }}" alt="photo"></a>
+                                </p>
+                            {% else %}
+                                <p><a href={% url 'blogapp:public-user-details' username=object.author %}>
+                                    <img src="{% static 'dog-logo.png' %}" alt="photo"></a></p>
+                            {% endif %}
+                        </section>
+                        <section>
+                            <a class="biglinks"
+                               href={% url 'blogapp:detail-post' username=object.author.username pk=object.pk %}>
+                                <h4>{{ object.description }}</h4></a>
+                            {% if object.photo %}
+                                <p><img src="{{ object.photo.url }}" alt="photo" width="300px"></p>
+                            {% endif %}
+                        </section>
+                    </div>
+                    <p><b><a class="biglinks"
+                             href={% url 'blogapp:public-user-details' username=object.author %}>{{ object.author }}</a></b>
+                        <span style="color: grey"> at {{ object.data }}</span>
+                        {% if object.comment_set.count > 0 %}
+                            <span>
+                                <a class="mini-links"
+                                   href={% url 'blogapp:detail-post' username=object.author.username pk=object.pk %}>
+                                    <img style="margin-left: 15px" src="{% static 'answer.png' %}" alt="photo"
+                                         width="20px">
+                                    {{ object.comment_set.count }} comments
+                                </a>
+                                </span>
+                        {% else %}
+                            <span>
+                                <a style="margin-left: 15px" class="mini-links"
+                                   href={% url 'blogapp:detail-post' username=object.author.username pk=object.pk %}>to comment</a>
+                                </span>
+                        {% endif %}
+                    </p>
+                    <br>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
