@@ -29,7 +29,7 @@ class RegisterView(CreateView):  # форма регистрации польз�
         return response
 
     def get_success_url(self):
-        return reverse_lazy("profileapp:user-details", kwargs={'username': self.request.user.username})
+        return reverse_lazy("profileapp:user-details", kwargs={'username': self.object.username})
 
 
 class DeleteUserView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
@@ -43,7 +43,7 @@ class DeleteUserView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
             return True
 
     model = User
-    success_url = reverse_lazy("functionalapp:hello")
+    success_url = reverse_lazy("blogapp:posts-list")
     template_name = "profileapp/user_confirm_delete.html"
 
 

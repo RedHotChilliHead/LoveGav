@@ -68,7 +68,7 @@ urlpatterns = [
         'delete': 'destroy',
     }), name='treatment-detail'),
 
-    path('api/users/', users_list),
-    path('api/users/<int:pk>/', UserDetailView.as_view()),
+    path('api/users/', users_list, name='api-users'),
+    path('api/users/<int:pk>/', UserDetailView.as_view(), name='api-user-details'),
 
 ]

@@ -28,7 +28,7 @@ class Profile(models.Model):
     bio = models.TextField(max_length=500, blank=True)
     email = models.EmailField(max_length=254, blank=True)
     birth = models.DateField(blank=True, null=True)
-    avatar = models.ImageField(null=True, upload_to=profile_avatar_directory_path)
+    avatar = models.ImageField(blank=True, null=True, upload_to=profile_avatar_directory_path)
 
     def __str__(self) -> str:
         return f"({self.user.username})"
