@@ -2,7 +2,7 @@ import json
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
-from profileapp.models import Profile
+from profileapp.models import Profile, Pet
 
 
 # c = Client()
@@ -234,5 +234,201 @@ class APIUserAndProfileTestCase(TestCase):
         user = User.objects.create_user(username=username, password=password)
         user.profile = Profile.objects.create(user=user, bio="0")
         response = self.client.delete(reverse('profileapp:api-user-details', kwargs={'pk': user.pk}))
-        # print(response.status_code)
-        # print(response.content)
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(User.objects.filter(username=username).exists())
+        self.assertFalse(Profile.objects.filter(user=user).exists())
+
+
+class PetProfileTestCase(TestCase):
+    create_data = {
+        "name": "Marusya",
+        "sex": "F",
+        "specie": "Dog",
+        "breed": "Spitz",
+        "color": "Red",
+    }
+
+    def setUp(self):
+        self.username = "testuser5"
+        self.password = "testpassword1235"
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.user.profile = Profile.objects.create(user=self.user, bio="It is a test", birth="1996-10-03")
+        self.client.login(username=self.username, password=self.password)
+        self.pet = Pet.objects.create(name=PetProfileTestCase.create_data['name'],
+                                      sex=PetProfileTestCase.create_data['sex'],
+                                      specie=PetProfileTestCase.create_data['specie'],
+                                      breed=PetProfileTestCase.create_data['breed'],
+                                      color=PetProfileTestCase.create_data['color'],
+                                      owner=self.user)
+
+    def tearDown(self) -> None:
+        self.user.delete()
+
+    def test_pet_register_view(self):
+        """
+        Проверка создания странички питомца через register-pet
+        """
+        post_data = {
+            "name": "Sharik",
+            "sex": "M",
+            "specie": "Dog",
+            "breed": "Mongrel",
+            "color": "Grey",
+            "birth": "2014-08-07",
+            "chip": False,
+            "tatoo": "",
+            "date_tatoo": "",
+            "passport": "",
+            "weight": 10
+        }
+
+        response = self.client.post(reverse("profileapp:register-pet", kwargs={"username": self.username}), post_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('profileapp:user-details', kwargs={"username": self.username}))
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Sharik")
+        self.assertTrue(Pet.objects.filter(owner=self.user, name=post_data['name']).exists())
+
+    def test_pet_details_view(self):
+        """
+        Проверка детального отображения информации о питомце через pet-details
+        """
+        response = self.client.get(
+            reverse('profileapp:pet-details', kwargs={"username": self.username, "pk": self.pet.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, PetProfileTestCase.create_data['name'])
+        self.assertContains(response, PetProfileTestCase.create_data['breed'])
+        self.assertContains(response, PetProfileTestCase.create_data['color'])
+
+    def test_pet_update_view(self):
+        """
+        Проверка обновления информации о питомце через update-pet
+        """
+        weight = 5.0
+        response = self.client.post(
+            reverse("profileapp:update-pet", kwargs={"username": self.username, "pk": self.pet.pk}),
+            {'weight': weight})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response,
+                             reverse('profileapp:pet-details', kwargs={"username": self.username, "pk": self.pet.pk}))
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+        print(response.content)
+        self.user.profile.refresh_from_db()
+        pet = Pet.objects.get(pk=self.pet.pk)
+        self.assertEqual(pet.weight, weight)
+        self.assertContains(response, f'Weight: {weight} (kg)', html=True)
+
+    def test_pet_delete_view(self):
+        """
+        Проверка удаления профиля питомца через delete-pet
+        """
+        response = self.client.get(
+            reverse('profileapp:delete-pet', kwargs={'username': self.user.username, "pk": self.pet.pk}))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(
+            reverse('profileapp:delete-pet', kwargs={'username': self.user.username, 'pk': self.pet.pk}))
+        self.assertRedirects(response, reverse('profileapp:user-details', kwargs={'username': self.user.username}))
+
+        self.assertFalse(Pet.objects.filter(name=self.create_data['name'], owner=self.user).exists())
+
+
+class APIPetTestCase(TestCase):
+    create_data = {
+        "name": "Marusya",
+        "sex": "F",
+        "specie": "Dog",
+        "breed": "Spitz",
+        "color": "Red",
+    }
+
+    def setUp(self):
+        self.username = "testuser5"
+        self.password = "testpassword1235"
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.user.profile = Profile.objects.create(user=self.user, bio="It is a test", birth="1996-10-03")
+        self.client.login(username=self.username, password=self.password)
+        self.pet = Pet.objects.create(name=PetProfileTestCase.create_data['name'],
+                                      sex=PetProfileTestCase.create_data['sex'],
+                                      specie=PetProfileTestCase.create_data['specie'],
+                                      breed=PetProfileTestCase.create_data['breed'],
+                                      color=PetProfileTestCase.create_data['color'],
+                                      owner=self.user)
+
+    def tearDown(self) -> None:
+        self.user.delete()
+
+    def test_pet_registration_api_view(self):
+        """
+        Проверка того, что api-users правильно создает профиль питомца
+        """
+        post_data = {
+            "name": "SharikAPI",
+            "sex": "M",
+            "specie": "Dog",
+            "breed": "Mongrel",
+            "color": "Grey",
+            "birth": "2021-08-07",
+            "weight": 10
+        }
+
+        post_data_json = json.dumps(post_data)
+
+        response = self.client.post(reverse('profileapp:pet-list'), post_data_json, content_type='application/json')
+        self.assertEqual(response.status_code, 201)  # Убеждаемся, что ответ является Created (успешное создание)
+        self.assertTrue(Pet.objects.filter(name=post_data['name'], owner=self.user).exists())
+
+    def test_user_list_api_view(self):
+        """
+        Проверка просмотра списка питомцев через api-users
+        """
+        response = self.client.get(reverse('profileapp:pet-list'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, PetProfileTestCase.create_data['name'])
+
+    def test_user_update_api_view(self):
+        """
+        Проверка обновления данных питомца через api-pet
+        """
+        weight = 25.0
+        # для того, что бы Python передал данные не как словарь, а как json
+        post_data_json = json.dumps({'name': self.pet.name, 'sex': self.pet.sex, 'weight': weight})
+        response = self.client.put(reverse('profileapp:pet-detail', kwargs={'pk': self.pet.pk}), post_data_json,
+                                   content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.user.profile.refresh_from_db()
+        pet = Pet.objects.get(name=PetProfileTestCase.create_data['name'], owner=self.user)
+        self.assertEqual(pet.weight, weight)
+
+    def test_pet_detail_api_view(self):
+        """
+        Проверка отображения детальной информации о питомце с помощью api-pet
+        """
+        response = self.client.get(reverse('profileapp:pet-detail', kwargs={'pk': self.pet.pk}))
+        self.assertEqual(response.status_code, 200)
+
+        expected_data = APIPetTestCase.create_data
+        expected_data['id'] = self.pet.pk
+        expected_data['birth'] = None
+        expected_data['chip'] = None
+        expected_data['tatoo'] = ""
+        expected_data['date_tatoo'] = None
+        expected_data['passport'] = None
+        expected_data['avatar'] = None
+        expected_data['weight'] = None
+
+        # Преобразуем контент ответа в словарь
+        response_data = json.loads(response.content)
+
+        self.assertEqual(response_data, expected_data)
+
+    def test_pet_delete_api_view(self):
+        """
+        Проверка удаления пользователя с помощью api-pet
+        """
+        response = self.client.delete(reverse('profileapp:pet-detail', kwargs={'pk': self.pet.pk}))
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Pet.objects.filter(name=self.pet.name, owner=self.user).exists())

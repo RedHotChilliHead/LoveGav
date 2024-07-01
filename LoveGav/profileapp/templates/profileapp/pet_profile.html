@@ -24,6 +24,10 @@
                     <p>Breed: {{ pet.breed }}</p>
                 {% endif %}
 
+                {% if pet.color %}
+                    <p>Color: {{ pet.color }}</p>
+                {% endif %}
+
                 {% if pet.birth %}
                     <p>Date of birth: {{ pet.birth }}</p>
                 {% endif %}
@@ -60,41 +64,42 @@
             <section>
                 <h2>Dairy</h2>
                 <br>
-            <p>Latest mood:
-                {% if mood %}
-                    {{ mood.mood_day }}
+                <p>Latest mood:
+                    {% if mood %}
+                        {{ mood.mood_day }}
+                        <a style="margin-left: 10px"
+                           href={% url 'profileapp:delete-mood' username=user.username pk=mood.id %}><img
+                                src="{% static 'X.png' %}" alt="delete mood" width="20px"></a>
+                    {% endif %}
                     <a style="margin-left: 10px"
-                       href={% url 'profileapp:delete-mood' username=user.username pk=mood.id %}><img
-                            src="{% static 'X.png' %}" alt="delete mood" width="20px"></a>
-                {% endif %}
-                <a style="margin-left: 10px"
-                   href={% url 'profileapp:create-mood' username=user.username pk=pet.id %}><img
-                        src="{% static 'plus.png' %}" alt="to mark mood" width="20px"></a></p>
+                       href={% url 'profileapp:create-mood' username=user.username pk=pet.id %}><img
+                            src="{% static 'plus.png' %}" alt="to mark mood" width="20px"></a></p>
 
-            <p>Latest heat:
-                {% if heat %}
-                    {{ heat.data }}
+                <p>Latest heat:
+                    {% if heat %}
+                        {{ heat.data }}
+                        <a style="margin-left: 10px"
+                           href={% url 'profileapp:delete-heat' username=user.username pk=heat.id %}><img
+                                src="{% static 'X.png' %}" alt="delete heat" width="20px"></a>
+                    {% endif %}
                     <a style="margin-left: 10px"
-                       href={% url 'profileapp:delete-heat' username=user.username pk=heat.id %}><img
-                            src="{% static 'X.png' %}" alt="delete heat" width="20px"></a>
-                {% endif %}
-                <a style="margin-left: 10px"
-                   href={% url 'profileapp:create-heat' username=user.username pk=pet.id %}><img
-                        src="{% static 'plus.png' %}" alt="to mark heat" width="20px"></a></p>
+                       href={% url 'profileapp:create-heat' username=user.username pk=pet.id %}><img
+                            src="{% static 'plus.png' %}" alt="to mark heat" width="20px"></a></p>
 
-            <p>Latest treatment:
-                {% if treatment %}
-                    {{ treatment.data }}
+                <p>Latest treatment:
+                    {% if treatment %}
+                        {{ treatment.data }}
+                        <a style="margin-left: 10px"
+                           href={% url 'profileapp:delete-treatment' username=user.username pk=treatment.id %}><img
+                                src="{% static 'X.png' %}" alt="delete treatment" width="20px"></a>
+
+                    {% endif %}
                     <a style="margin-left: 10px"
-                       href={% url 'profileapp:delete-treatment' username=user.username pk=treatment.id %}><img
-                            src="{% static 'X.png' %}" alt="delete treatment" width="20px"></a>
+                       href={% url 'profileapp:create-treatment' username=user.username pk=pet.id %}><img
+                            src="{% static 'plus.png' %}" alt="to mark treatment" width="20px"></a>
 
-                {% endif %}
-                <a style="margin-left: 10px"
-                   href={% url 'profileapp:create-treatment' username=user.username pk=pet.id %}><img
-                        src="{% static 'plus.png' %}" alt="to mark treatment" width="20px"></a>
-
-                <br><br><a href={% url 'profileapp:dairy-pet-details' username=user.username pk=pet.id %}>more detailed</a>
+                    <br><br><a href={% url 'profileapp:dairy-pet-details' username=user.username pk=pet.id %}>more
+                        detailed</a>
             </section>
         </div>
     </div>

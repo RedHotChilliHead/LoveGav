@@ -118,7 +118,7 @@ class RegisterPetView(UserPassesTestMixin, CreateView):
     fields = "name", "sex", "specie", "breed", "color", "birth", "chip", "tatoo", "date_tatoo", "weight"
     template_name = 'profileapp/pet_form.html'
 
-    def form_valid(self, form):  # переопределение метода, чтоб после создания пользователя проходила аутентификация
+    def form_valid(self, form):  # переопределение метода, чтоб владельцем питомца установить текущего юзера
         form.instance.owner = self.request.user
         response = super().form_valid(form)
         return response
