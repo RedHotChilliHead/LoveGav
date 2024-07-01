@@ -2,7 +2,7 @@ import json
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
-from profileapp.models import Profile, Pet
+from profileapp.models import Profile, Pet, Mood, Heat, Treatment
 
 
 # c = Client()
@@ -432,3 +432,122 @@ class APIPetTestCase(TestCase):
         response = self.client.delete(reverse('profileapp:pet-detail', kwargs={'pk': self.pet.pk}))
         self.assertEqual(response.status_code, 204)
         self.assertFalse(Pet.objects.filter(name=self.pet.name, owner=self.user).exists())
+
+
+class MoodTestCase(TestCase):
+    def setUp(self):
+        self.username = "testuser5"
+        self.password = "testpassword1235"
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.user.profile = Profile.objects.create(user=self.user, bio="It is a test", birth="1996-10-03")
+        self.client.login(username=self.username, password=self.password)
+        self.pet = Pet.objects.create(name="Marusya", sex="F", specie="Dog", breed="Spitz", color="Red", owner=self.user)
+
+    def tearDown(self) -> None:
+        self.user.delete()
+
+    def test_mood_create_view(self):
+        """
+        Проверка создания записи о настроении питомца через view create-mood
+        """
+        post_data = {"mood_day": "play", "data": "2024-07-01"}
+        response = self.client.post(reverse("profileapp:create-mood", kwargs={"username": self.username, "pk": self.pet.pk}),
+                                    post_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('profileapp:pet-details', kwargs={"username": self.username, "pk": self.pet.pk}))
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, post_data['mood_day'])
+        self.assertTrue(Mood.objects.filter(pet=self.pet, data=post_data['data'], mood_day=post_data['mood_day']).exists())
+
+    def test_mood_delete_view(self):
+        """
+        Проверка удаления записи о настроении питомца через delete-mood
+        """
+        mood = Mood.objects.create(pet=self.pet, mood_day="exc", data="2024-05-05")
+        response = self.client.delete(reverse('profileapp:delete-mood', kwargs={"username": self.username, "pk": self.pet.pk}))
+        self.assertRedirects(response, reverse('profileapp:pet-details', kwargs={'username': self.user.username, "pk": self.pet.pk}))
+        self.assertFalse(Mood.objects.filter(mood_day=mood.mood_day, pet=mood.pet, data=mood.data).exists())
+
+class HeatTestCase(TestCase):
+    def setUp(self):
+        self.username = "testuser5"
+        self.password = "testpassword1235"
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.user.profile = Profile.objects.create(user=self.user, bio="It is a test", birth="1996-10-03")
+        self.client.login(username=self.username, password=self.password)
+        self.pet = Pet.objects.create(name="Marusya", sex="F", specie="Dog", breed="Spitz", color="Red", owner=self.user)
+
+    def tearDown(self) -> None:
+        self.user.delete()
+
+    def test_heat_create_view(self):
+        """
+        Проверка создания записи о течке питомца через view create-heat
+        """
+        import datetime
+        post_data = {"soreness": "5/10", "data": "2024-05-01"}
+        response = self.client.post(reverse("profileapp:create-heat", kwargs={"username": self.username, "pk": self.pet.pk}),
+                                    post_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('profileapp:pet-details', kwargs={"username": self.username, "pk": self.pet.pk}))
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+
+        date_obj = datetime.datetime.strptime(post_data['data'], "%Y-%m-%d")  # Преобразование строки в объект datetime
+        formatted_date = date_obj.strftime("%B %d, %Y")  # Преобразование объекта datetime в нужный строковый формат
+        formatted_date = formatted_date.replace(' 0', ' ')  # Удаление ведущего нуля в дне
+        self.assertContains(response, formatted_date)
+
+        self.assertTrue(Heat.objects.filter(pet=self.pet, data=post_data['data'], soreness=post_data['soreness']).exists())
+
+    def test_mood_delete_view(self):
+        """
+        Проверка удаления записи о течке питомца через delete-heat
+        """
+        heat = Heat.objects.create(pet=self.pet, soreness="10/10", data="2024-06-06")
+        response = self.client.delete(reverse('profileapp:delete-heat', kwargs={"username": self.username, "pk": self.pet.pk}))
+        self.assertRedirects(response, reverse('profileapp:pet-details', kwargs={'username': self.user.username, "pk": self.pet.pk}))
+        self.assertFalse(Heat.objects.filter(pet=self.pet, soreness=heat.soreness, data=heat.data).exists())
+
+
+class TreatmentTestCase(TestCase):
+    def setUp(self):
+        self.username = "testuser5"
+        self.password = "testpassword1235"
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.user.profile = Profile.objects.create(user=self.user, bio="It is a test", birth="1996-10-03")
+        self.client.login(username=self.username, password=self.password)
+        self.pet = Pet.objects.create(name="Marusya", sex="F", specie="Dog", breed="Spitz", color="Red", owner=self.user)
+
+    def tearDown(self) -> None:
+        self.user.delete()
+
+    def test_treatment_create_view(self):
+        """
+        Проверка создания записи о вакцинировании питомца через view create-treatment
+        """
+        import datetime
+        post_data = {"name": "ticks", "data": "2024-04-29", "data_next": "2024-05-29"}
+        response = self.client.post(reverse("profileapp:create-treatment", kwargs={"username": self.username, "pk": self.pet.pk}),
+                                    post_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('profileapp:pet-details', kwargs={"username": self.username, "pk": self.pet.pk}))
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+
+        date_obj = datetime.datetime.strptime(post_data['data'], "%Y-%m-%d")  # Преобразование строки в объект datetime
+        formatted_date = date_obj.strftime("%B %d, %Y")  # Преобразование объекта datetime в нужный строковый формат
+        formatted_date = formatted_date.replace(' 0', ' ')  # Удаление ведущего нуля в дне
+        self.assertContains(response, formatted_date)
+
+        self.assertTrue(Treatment.objects.filter(pet=self.pet, data=post_data['data'], name=post_data['name']).exists())
+
+    def test_treatment_delete_view(self):
+        """
+        Проверка удаления записи о течке питомца через delete-treatment
+        """
+        treatment = Treatment.objects.create(pet=self.pet, name="ticksx2", data="2024-06-06", data_next="2024-10-06")
+        response = self.client.delete(reverse('profileapp:delete-treatment', kwargs={"username": self.username, "pk": self.pet.pk}))
+        self.assertRedirects(response, reverse('profileapp:pet-details', kwargs={'username': self.user.username, "pk": self.pet.pk}))
+        self.assertFalse(Treatment.objects.filter(pet=self.pet, name=treatment.name, data=treatment.data).exists())
