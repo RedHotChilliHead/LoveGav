@@ -47,26 +47,26 @@ urlpatterns = [
 
     path('api/', include(routers.urls)),
     path('api/pets/<int:pk>/moods/', MoodViewSet.as_view({'get': 'list',
-                                                          'post': 'create'})),
+                                                          'post': 'create'}), name='mood-api-list'),
     path('api/pets/<int:pk>/moods/<int:mood_pk>/', MoodViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',
         'delete': 'destroy',
-    }), name='mood-detail'),
+    }), name='mood-api-detail'),
     path('api/pets/<int:pk>/heats/', HeatViewSet.as_view({'get': 'list',
-                                                          'post': 'create'})),
+                                                          'post': 'create'}), name='heat-api-list'),
     path('api/pets/<int:pk>/heats/<int:heat_pk>/', HeatViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',
         'delete': 'destroy',
-    }), name='heat-detail'),
+    }), name='heat-api-detail'),
     path('api/pets/<int:pk>/treatments/', TreatmentViewSet.as_view({'get': 'list',
-                                                          'post': 'create'})),
+                                                          'post': 'create'}), name='treatment-api-list'),
     path('api/pets/<int:pk>/treatments/<int:treatment_pk>/', TreatmentViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',
         'delete': 'destroy',
-    }), name='treatment-detail'),
+    }), name='treatment-api-detail'),
 
     path('api/users/', users_list, name='api-users'),
     path('api/users/<int:pk>/', UserDetailView.as_view(), name='api-user-details'),
