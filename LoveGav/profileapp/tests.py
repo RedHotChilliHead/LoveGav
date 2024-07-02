@@ -1,4 +1,6 @@
 import json
+import os
+
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -825,3 +827,95 @@ class APITreatmentTestCase(TestCase):
             reverse('profileapp:treatment-api-detail', kwargs={'pk': self.pet.pk, 'treatment_pk': self.treatment.pk}))
         self.assertEqual(response.status_code, 204)
         self.assertFalse(Treatment.objects.filter(pk=self.treatment.pk).exists())
+
+
+class DairyTestCase(TestCase):
+    mood_data = {
+        'mood_day': 'aggr',
+        'data': '2023-01-01',
+    }
+    heat_data = {
+        'soreness': '1/10',
+        'data': '2023-02-02',
+    }
+    treatment_data = {
+        'name': 'megaticks',
+        'data': '2023-03-03',
+        'data_next': '2023-04-04',
+    }
+
+    def setUp(self):
+        self.username = "testuser5"
+        self.password = "testpassword1235"
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.user.profile = Profile.objects.create(user=self.user, bio="It is a test", birth="1996-10-03")
+        self.client.login(username=self.username, password=self.password)
+        self.pet = Pet.objects.create(name="Marusya", sex="F", specie="Dog", breed="Spitz", color="Red",
+                                      owner=self.user)
+        self.mood = Mood.objects.create(pet=self.pet, mood_day=DairyTestCase.mood_data['mood_day'],
+                                        data=DairyTestCase.mood_data['data'])
+        self.heat = Heat.objects.create(pet=self.pet, soreness=DairyTestCase.heat_data['soreness'],
+                                        data=DairyTestCase.heat_data['data'])
+        self.treatment = Treatment.objects.create(pet=self.pet, name=DairyTestCase.treatment_data['name'],
+                                                  data=DairyTestCase.treatment_data['data'],
+                                                  data_next=DairyTestCase.treatment_data['data_next'])
+
+    def tearDown(self) -> None:
+        self.user.delete()
+
+    def test_dairy_details_view(self):
+        """
+        Проверка детального отображения информации о настроении, течках, вакцинировании и об обработках питомца через dairy-pet-details
+        """
+        import datetime
+        response = self.client.get(
+            reverse('profileapp:dairy-pet-details', kwargs={"username": self.username, "pk": self.pet.pk}))
+        self.assertEqual(response.status_code, 200)
+
+        date_obj = datetime.datetime.strptime(DairyTestCase.mood_data['data'], "%Y-%m-%d")  # Преобразование строки в объект datetime
+        formatted_date = date_obj.strftime("%b. %d, %Y")  # Преобразование объекта datetime в нужный строковый формат
+        formatted_date = formatted_date.replace(' 0', ' ')  # Удаление ведущего нуля в дне
+        expected_mood = DairyTestCase.mood_data['mood_day'] + " at " + formatted_date
+        self.assertContains(response, expected_mood)
+
+        date_obj = datetime.datetime.strptime(DairyTestCase.heat_data['data'], "%Y-%m-%d")
+        formatted_date = date_obj.strftime("%b. %d, %Y").replace(' 0', ' ')
+        expected_heat = DairyTestCase.heat_data['soreness'] + " at " + formatted_date
+        self.assertContains(response, expected_heat)
+
+        date_obj = datetime.datetime.strptime(DairyTestCase.treatment_data['data'], "%Y-%m-%d")
+        formatted_date = date_obj.strftime("%B %d, %Y").replace(' 0', ' ')
+        data_next_obj = datetime.datetime.strptime(DairyTestCase.treatment_data['data_next'], "%Y-%m-%d")
+        formatted_data_next = data_next_obj.strftime("%B %d, %Y").replace(' 0', ' ')
+        expected_treatment = DairyTestCase.treatment_data['name'] + " at " + formatted_date + " and next data " + formatted_data_next
+        self.assertContains(response, expected_treatment)
+
+    def test_dairy_export_view(self):
+        """
+        Проверка экспорта дневника о настроении, течках, вакцинировании и об обработках питомца через export-dairy
+        """
+        import fitz
+
+        response = self.client.get(reverse('profileapp:export-dairy', kwargs={"username": self.username, "pk": self.pet.pk}))
+        self.assertRedirects(response, reverse('profileapp:dairy-pet-details', kwargs={"username": self.username, "pk": self.pet.pk}))
+
+        file_path = "dairy_demo.pdf"
+        self.assertTrue(os.path.exists(file_path))
+
+        with fitz.open(file_path) as pdf_document:
+            pdf_text = ""
+            for page_num in range(pdf_document.page_count):
+                page = pdf_document.load_page(page_num)
+                pdf_text += page.get_text()
+
+            self.assertIn("Marusya`s dairy", pdf_text)
+            self.assertIn("Moods", pdf_text)
+            self.assertIn(DairyTestCase.mood_data['mood_day'] + " at " + DairyTestCase.mood_data['data'], pdf_text)
+            self.assertIn("Heats", pdf_text)
+            self.assertIn(DairyTestCase.heat_data['soreness'] + " at " + DairyTestCase.heat_data['data'], pdf_text)
+            self.assertIn("Treatments", pdf_text)
+            self.assertIn(DairyTestCase.treatment_data['name'] + " at " + DairyTestCase.treatment_data['data'] + " and next data: "
+                          + DairyTestCase.treatment_data['data_next'], pdf_text)
+
+        os.remove(file_path)
+
