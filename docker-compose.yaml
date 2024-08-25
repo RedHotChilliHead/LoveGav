@@ -8,9 +8,10 @@ services:
       POSTGRES_USER: django_admin
       POSTGRES_PASSWORD: admin
     ports:
-      - "5432:5432"
+      - "54321:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
@@ -24,6 +25,9 @@ services:
       sh -c '/wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8080'
     ports:
       - "8000:8080"
+    volumes:
+      - .:/LoveGav  # Монтирование проекта в контейнер
+      - ./uploads:/lovegavapp/uploads  # Монтирование директории media на хосте в media в контейнере
     environment:
       - DATABASE_NAME=lovegav
       - DATABASE_USER=django_admin

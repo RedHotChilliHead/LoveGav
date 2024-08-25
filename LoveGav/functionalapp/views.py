@@ -120,6 +120,7 @@ class QuestionListView(ListView):
         .prefetch_related("author").select_related("author__profile").prefetch_related("answer_set")
     )
 
+
 class QuestionDetailsView(View):
     """
     Представление для просмотра вопроса и ответов на него
@@ -145,7 +146,7 @@ class QuestionDetailsView(View):
             answer.author = request.user
             answer.question = question
             answer.save()
-            return redirect('functionalapp:question-list')
+            return redirect('functionalapp:questions-list')
         else:
             context = {
                 'question': question,
@@ -153,6 +154,7 @@ class QuestionDetailsView(View):
                 'permission': self.request.user.is_staff or self.request.user.pk == question.author.id
             }
             return render(request, 'functionalapp/question_details.html', context=context)
+
 
 class QuestionUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
@@ -185,6 +187,7 @@ class QuestionDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     model = Question
     template_name = "functionalapp/question_confirm_delete.html"
     success_url = reverse_lazy("functionalapp:question-list")
+
 
 class AnswerDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
