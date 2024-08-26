@@ -5,20 +5,6 @@ from django.urls import reverse
 from profileapp.models import Profile
 
 
-# c = Client()
-# get(path, data=None, follow=False, secure=False, *, headers=None, **extra)
-# with open("wishlist.doc", "rb") as fp:
-# ...     c.post("/customers/wishes/", {"name": "fred", "attachment": fp})
-# head(path, data=None, follow=False, secure=False, *, headers=None, **extra)
-# options(path, data='', content_type='application/octet-stream', follow=False, secure=False, *, headers=None, **extra)
-# put(path, data='', content_type='application/octet-stream', follow=False, secure=False, *, headers=None, **extra)
-# patch(path, data='', content_type='application/octet-stream', follow=False, secure=False, *, headers=None, **extra)
-# delete(path, data='', content_type='application/octet-stream', follow=False, secure=False, *, headers=None, **extra)
-# c.login(username="fred", password="secret") logout()
-#         if response.status_code == 200:
-#             form_errors = response.context['form'].errors
-#             print("Form errors:", form_errors)
-
 class UserAndProfileRegisterTestCase(TestCase):
     """
     Проверка того, что view register правильно создает пользователя и профиль
@@ -141,7 +127,6 @@ class APIUserAndProfileTestCase(TestCase):
         self.password = "testpassword1235"
         self.user = User.objects.create_user(username=self.username, password=self.password)
         self.user.profile = Profile.objects.create(user=self.user, bio="It is a test", birth="1996-10-03")
-        # self.client.login(username=self.username, password=self.password)
 
     def tearDown(self) -> None:
         self.user.delete()
@@ -234,5 +219,3 @@ class APIUserAndProfileTestCase(TestCase):
         user = User.objects.create_user(username=username, password=password)
         user.profile = Profile.objects.create(user=user, bio="0")
         response = self.client.delete(reverse('profileapp:api-user-details', kwargs={'pk': user.pk}))
-        # print(response.status_code)
-        # print(response.content)

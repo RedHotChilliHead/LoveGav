@@ -8,8 +8,12 @@ from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 
-from profileapp.models import Profile, Pet, Mood, Heat, Treatment
+import datetime
+from datetime import timedelta
 from fpdf import FPDF
+
+from profileapp.models import Profile, Pet, Mood, Heat, Treatment
+
 
 class RegisterView(CreateView):  # форма регистрации пользователя
     """
@@ -101,6 +105,16 @@ class UserDetaislView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['user'] = self.object.user  # поле user-владельца записи
         context['pets'] = self.object.user.pet_set.all()
+
+        now = datetime.date.today()
+        notifications = []
+        if self.request.user.is_authenticated and self.request.user.pet_set:
+            for pet in self.request.user.pet_set.all():
+                for treatment in pet.treatment_set.all():
+                    if treatment.data_next - now < timedelta(7):
+                        notifications.append(f"Warning: {treatment.data_next}, it's time to apply {treatment.name}")
+        context['notifications'] = notifications
+
         return context
 
 

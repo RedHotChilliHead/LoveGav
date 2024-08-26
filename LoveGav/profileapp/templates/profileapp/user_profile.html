@@ -6,6 +6,13 @@
 {% block body %}
     {% load static %}
     <div class="fixed-container">
+        <div>
+            {% if notifications %}
+                {% for notification in notifications %}
+                    <p>{{ notification }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
         <div class="section-main">
             <section>
                 <h1>Personal data<a style="margin-left: 10px"

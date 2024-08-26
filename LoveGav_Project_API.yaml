@@ -1,0 +1,2259 @@
+openapi: 3.0.3
+info:
+  title: LoveGav Project API
+  version: 0.0.1
+  description: Pet`s dairy, blog and forum
+paths:
+  /blog/api/posts/:
+    get:
+      operationId: blog_api_posts_list
+      description: |-
+        Набор представлений для действий над Post.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: query
+        name: author
+        schema:
+          type: integer
+      - in: query
+        name: data
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: description
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPostList'
+          description: ''
+    post:
+      operationId: blog_api_posts_create
+      description: |-
+        Набор представлений для действий над Post.
+
+        Полный CRUD для сущностей постов
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Post'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+  /blog/api/posts/{id}/:
+    get:
+      operationId: blog_api_posts_retrieve
+      description: |-
+        Набор представлений для действий над Post.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this post.
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    put:
+      operationId: blog_api_posts_update
+      description: |-
+        Набор представлений для действий над Post.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this post.
+        required: true
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Post'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    patch:
+      operationId: blog_api_posts_partial_update
+      description: |-
+        Набор представлений для действий над Post.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this post.
+        required: true
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    delete:
+      operationId: blog_api_posts_destroy
+      description: |-
+        Набор представлений для действий над Post.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this post.
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /blog/api/posts/{id}/comments/:
+    get:
+      operationId: blog_api_posts_comments_list
+      description: |-
+        Набор представлений для действий над Comment.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCommentList'
+          description: ''
+    post:
+      operationId: blog_api_posts_comments_create
+      description: |-
+        Набор представлений для действий над Comment.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+  /blog/api/posts/{id}/comments/{comment_pk}/:
+    get:
+      operationId: blog_api_posts_comments_retrieve
+      description: |-
+        Набор представлений для действий над Comment.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: comment_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+    put:
+      operationId: blog_api_posts_comments_update
+      description: |-
+        Набор представлений для действий над Comment.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: comment_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+    delete:
+      operationId: blog_api_posts_comments_destroy
+      description: |-
+        Набор представлений для действий над Comment.
+
+        Полный CRUD для сущностей постов
+      parameters:
+      - in: path
+        name: comment_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /func/api/calculate-calories/:
+    get:
+      operationId: func_api_calculate_calories_retrieve
+      description: |-
+        Представление для расчета калорий
+        Ожидаемые данные для POST-запроса:
+        - weight - вес питомца;
+        - calorie_content - калорийность корма (ккал/кг);
+        - коэффициенты активности (true/false):
+            k1 - Light physical activity;
+            k2 - Hard work;
+            k3 - Without physical activity;
+            k4 - Feeds the puppies;
+            k5 - Just born (0-3 months);
+            k6 - Large breed puppy (3-9 months old);
+            k7 - Large breed puppy (9-24 months old);
+            k8 - Puppy of medium and small breeds (3-6 months);
+            k9 - Puppy of medium and small breeds (3-6 months);
+            k10 - Puppy of medium and small breeds (6-12 months).
+        Пример:
+        {
+        "weight": 5.5,
+        "calorie_content": 4000,
+        "k1": true
+        }
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: func_api_calculate_calories_create
+      description: |-
+        Представление для расчета калорий
+        Ожидаемые данные для POST-запроса:
+        - weight - вес питомца;
+        - calorie_content - калорийность корма (ккал/кг);
+        - коэффициенты активности (true/false):
+            k1 - Light physical activity;
+            k2 - Hard work;
+            k3 - Without physical activity;
+            k4 - Feeds the puppies;
+            k5 - Just born (0-3 months);
+            k6 - Large breed puppy (3-9 months old);
+            k7 - Large breed puppy (9-24 months old);
+            k8 - Puppy of medium and small breeds (3-6 months);
+            k9 - Puppy of medium and small breeds (3-6 months);
+            k10 - Puppy of medium and small breeds (6-12 months).
+        Пример:
+        {
+        "weight": 5.5,
+        "calorie_content": 4000,
+        "k1": true
+        }
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+  /func/api/playgrounds/:
+    get:
+      operationId: func_api_playgrounds_list
+      description: Представление просмотра списка площадок для собак
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPlaygroundList'
+          description: ''
+  /func/api/questions/:
+    get:
+      operationId: func_api_questions_list
+      description: |-
+        Набор представлений для действий над Question.
+
+        Полный CRUD для сущностей вопросов пользователей
+      parameters:
+      - in: query
+        name: author
+        schema:
+          type: integer
+      - in: query
+        name: data
+        schema:
+          type: string
+          format: date-time
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedQuestionList'
+          description: ''
+    post:
+      operationId: func_api_questions_create
+      description: |-
+        Набор представлений для действий над Question.
+
+        Полный CRUD для сущностей вопросов пользователей
+      tags:
+      - func
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Question'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+  /func/api/questions/{id}/:
+    get:
+      operationId: func_api_questions_retrieve
+      description: |-
+        Набор представлений для действий над Question.
+
+        Полный CRUD для сущностей вопросов пользователей
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question.
+        required: true
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    put:
+      operationId: func_api_questions_update
+      description: |-
+        Набор представлений для действий над Question.
+
+        Полный CRUD для сущностей вопросов пользователей
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question.
+        required: true
+      tags:
+      - func
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Question'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    patch:
+      operationId: func_api_questions_partial_update
+      description: |-
+        Набор представлений для действий над Question.
+
+        Полный CRUD для сущностей вопросов пользователей
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question.
+        required: true
+      tags:
+      - func
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestion'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    delete:
+      operationId: func_api_questions_destroy
+      description: |-
+        Набор представлений для действий над Question.
+
+        Полный CRUD для сущностей вопросов пользователей
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question.
+        required: true
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /func/api/questions/{id}/answers/:
+    get:
+      operationId: func_api_questions_answers_list
+      description: |-
+        Набор представлений для действий над Answer.
+
+        Полный CRUD для сущностей ответов на вопросы пользователей
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAnswerList'
+          description: ''
+    post:
+      operationId: func_api_questions_answers_create
+      description: |-
+        Набор представлений для действий над Answer.
+
+        Полный CRUD для сущностей ответов на вопросы пользователей
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - func
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Answer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Answer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Answer'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Answer'
+          description: ''
+  /func/api/questions/{id}/answers/{answer_pk}/:
+    get:
+      operationId: func_api_questions_answers_retrieve
+      description: |-
+        Набор представлений для действий над Answer.
+
+        Полный CRUD для сущностей ответов на вопросы пользователей
+      parameters:
+      - in: path
+        name: answer_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Answer'
+          description: ''
+    put:
+      operationId: func_api_questions_answers_update
+      description: |-
+        Набор представлений для действий над Answer.
+
+        Полный CRUD для сущностей ответов на вопросы пользователей
+      parameters:
+      - in: path
+        name: answer_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - func
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Answer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Answer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Answer'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Answer'
+          description: ''
+    delete:
+      operationId: func_api_questions_answers_destroy
+      description: |-
+        Набор представлений для действий над Answer.
+
+        Полный CRUD для сущностей ответов на вопросы пользователей
+      parameters:
+      - in: path
+        name: answer_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - func
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /profile/api/pets/:
+    get:
+      operationId: profile_api_pets_list
+      description: |-
+        Набор представлений для действий над Pet.
+
+        Полный CRUD для сущностей питомцев
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPetList'
+          description: ''
+    post:
+      operationId: profile_api_pets_create
+      description: |-
+        Набор представлений для действий над Pet.
+
+        Полный CRUD для сущностей питомцев
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          description: ''
+  /profile/api/pets/{id}/:
+    get:
+      operationId: profile_api_pets_retrieve
+      description: |-
+        Набор представлений для действий над Pet.
+
+        Полный CRUD для сущностей питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this pet.
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          description: ''
+    put:
+      operationId: profile_api_pets_update
+      description: |-
+        Набор представлений для действий над Pet.
+
+        Полный CRUD для сущностей питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this pet.
+        required: true
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          description: ''
+    patch:
+      operationId: profile_api_pets_partial_update
+      description: |-
+        Набор представлений для действий над Pet.
+
+        Полный CRUD для сущностей питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this pet.
+        required: true
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPet'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          description: ''
+    delete:
+      operationId: profile_api_pets_destroy
+      description: |-
+        Набор представлений для действий над Pet.
+
+        Полный CRUD для сущностей питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this pet.
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /profile/api/pets/{id}/heats/:
+    get:
+      operationId: profile_api_pets_heats_list
+      description: |-
+        Набор представлений для действий над Heat.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHeatList'
+          description: ''
+    post:
+      operationId: profile_api_pets_heats_create
+      description: |-
+        Набор представлений для действий над Heat.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Heat'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Heat'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Heat'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Heat'
+          description: ''
+  /profile/api/pets/{id}/heats/{heat_pk}/:
+    get:
+      operationId: profile_api_pets_heats_retrieve
+      description: |-
+        Набор представлений для действий над Heat.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: heat_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Heat'
+          description: ''
+    put:
+      operationId: profile_api_pets_heats_update
+      description: |-
+        Набор представлений для действий над Heat.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: heat_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Heat'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Heat'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Heat'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Heat'
+          description: ''
+    delete:
+      operationId: profile_api_pets_heats_destroy
+      description: |-
+        Набор представлений для действий над Heat.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: heat_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /profile/api/pets/{id}/moods/:
+    get:
+      operationId: profile_api_pets_moods_list
+      description: |-
+        Набор представлений для действий над Mood.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMoodList'
+          description: ''
+    post:
+      operationId: profile_api_pets_moods_create
+      description: |-
+        Набор представлений для действий над Mood.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mood'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Mood'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Mood'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mood'
+          description: ''
+  /profile/api/pets/{id}/moods/{mood_pk}/:
+    get:
+      operationId: profile_api_pets_moods_retrieve
+      description: |-
+        Набор представлений для действий над Mood.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: mood_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mood'
+          description: ''
+    put:
+      operationId: profile_api_pets_moods_update
+      description: |-
+        Набор представлений для действий над Mood.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: mood_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mood'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Mood'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Mood'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mood'
+          description: ''
+    delete:
+      operationId: profile_api_pets_moods_destroy
+      description: |-
+        Набор представлений для действий над Mood.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: mood_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /profile/api/pets/{id}/treatments/:
+    get:
+      operationId: profile_api_pets_treatments_list
+      description: |-
+        Набор представлений для действий над Treatment.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTreatmentList'
+          description: ''
+    post:
+      operationId: profile_api_pets_treatments_create
+      description: |-
+        Набор представлений для действий над Treatment.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Treatment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Treatment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Treatment'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Treatment'
+          description: ''
+  /profile/api/pets/{id}/treatments/{treatment_pk}/:
+    get:
+      operationId: profile_api_pets_treatments_retrieve
+      description: |-
+        Набор представлений для действий над Treatment.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: treatment_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Treatment'
+          description: ''
+    put:
+      operationId: profile_api_pets_treatments_update
+      description: |-
+        Набор представлений для действий над Treatment.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: treatment_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Treatment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Treatment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Treatment'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Treatment'
+          description: ''
+    delete:
+      operationId: profile_api_pets_treatments_destroy
+      description: |-
+        Набор представлений для действий над Treatment.
+
+        Полный CRUD для настроения питомцев
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: treatment_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /profile/api/users/:
+    get:
+      operationId: profile_api_users_retrieve
+      description: Просмотр списка всех пользователей или создание нового пользователя
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: profile_api_users_create
+      description: Просмотр списка всех пользователей или создание нового пользователя
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /profile/api/users/{id}/:
+    get:
+      operationId: profile_api_users_retrieve_2
+      description: Create, update, delete и detail для конкретного пользователя
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: profile_api_users_create_2
+      description: Create, update, delete и detail для конкретного пользователя
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: profile_api_users_destroy
+      description: Create, update, delete и detail для конкретного пользователя
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profile
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Answer:
+      type: object
+      description: Сериализатор записей ответов на вопросы пользователей
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        question:
+          type: integer
+        body:
+          type: string
+          maxLength: 500
+        data:
+          type: string
+          format: date-time
+          readOnly: true
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        author:
+          type: integer
+          readOnly: true
+      required:
+      - author
+      - body
+      - data
+      - id
+    Comment:
+      type: object
+      description: Сериализатор записей комментариев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        post:
+          type: integer
+        body:
+          type: string
+          maxLength: 150
+        data:
+          type: string
+          format: date-time
+          readOnly: true
+        author:
+          type: integer
+          readOnly: true
+      required:
+      - author
+      - data
+      - id
+    Heat:
+      type: object
+      description: Сериализатор записей о течках питомцев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        pet:
+          type: integer
+        soreness:
+          type: string
+          nullable: true
+          maxLength: 50
+        data:
+          type: string
+          format: date
+      required:
+      - data
+      - id
+    Mood:
+      type: object
+      description: Сериализатор записей о настроении питомцев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        pet:
+          type: integer
+        mood_day:
+          $ref: '#/components/schemas/MoodDayEnum'
+        data:
+          type: string
+          format: date
+      required:
+      - data
+      - id
+      - mood_day
+    MoodDayEnum:
+      enum:
+      - slug
+      - rest
+      - aggr
+      - norm
+      - play
+      - exc
+      type: string
+      description: |-
+        * `slug` - sluggish
+        * `rest` - restless
+        * `aggr` - aggressive
+        * `norm` - normal
+        * `play` - playful
+        * `exc` - excellent
+    PaginatedAnswerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Answer'
+    PaginatedCommentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    PaginatedHeatList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Heat'
+    PaginatedMoodList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mood'
+    PaginatedPetList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pet'
+    PaginatedPlaygroundList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Playground'
+    PaginatedPostList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+    PaginatedQuestionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    PaginatedTreatmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Treatment'
+    PatchedAnswer:
+      type: object
+      description: Сериализатор записей ответов на вопросы пользователей
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        question:
+          type: integer
+        body:
+          type: string
+          maxLength: 500
+        data:
+          type: string
+          format: date-time
+          readOnly: true
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        author:
+          type: integer
+          readOnly: true
+    PatchedComment:
+      type: object
+      description: Сериализатор записей комментариев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        post:
+          type: integer
+        body:
+          type: string
+          maxLength: 150
+        data:
+          type: string
+          format: date-time
+          readOnly: true
+        author:
+          type: integer
+          readOnly: true
+    PatchedHeat:
+      type: object
+      description: Сериализатор записей о течках питомцев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        pet:
+          type: integer
+        soreness:
+          type: string
+          nullable: true
+          maxLength: 50
+        data:
+          type: string
+          format: date
+    PatchedMood:
+      type: object
+      description: Сериализатор записей о настроении питомцев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        pet:
+          type: integer
+        mood_day:
+          $ref: '#/components/schemas/MoodDayEnum'
+        data:
+          type: string
+          format: date
+    PatchedPet:
+      type: object
+      description: Сериализатор записей питомцев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        sex:
+          $ref: '#/components/schemas/SexEnum'
+        specie:
+          type: string
+          nullable: true
+          maxLength: 20
+        breed:
+          type: string
+          nullable: true
+          maxLength: 30
+        color:
+          type: string
+          nullable: true
+          maxLength: 20
+        birth:
+          type: string
+          format: date
+          nullable: true
+        chip:
+          type: boolean
+          nullable: true
+        tatoo:
+          type: string
+          maxLength: 20
+        date_tatoo:
+          type: string
+          format: date
+          nullable: true
+        passport:
+          type: string
+          format: uri
+          nullable: true
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+        weight:
+          type: number
+          format: double
+          nullable: true
+    PatchedPost:
+      type: object
+      description: Сериализатор записей постов
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+          maxLength: 300
+        data:
+          type: string
+          format: date-time
+          readOnly: true
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        author:
+          type: integer
+          readOnly: true
+    PatchedQuestion:
+      type: object
+      description: Сериализатор записей вопросов пользователей
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        head:
+          type: string
+          maxLength: 100
+        body:
+          type: string
+          maxLength: 500
+        data:
+          type: string
+          format: date-time
+          readOnly: true
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        author:
+          type: integer
+          readOnly: true
+    PatchedTreatment:
+      type: object
+      description: Сериализатор записей о принимаемых лекарствах и обработках питомцев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        pet:
+          type: integer
+        name:
+          type: string
+          maxLength: 150
+        data:
+          type: string
+          format: date
+        data_next:
+          type: string
+          format: date
+    Pet:
+      type: object
+      description: Сериализатор записей питомцев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        sex:
+          $ref: '#/components/schemas/SexEnum'
+        specie:
+          type: string
+          nullable: true
+          maxLength: 20
+        breed:
+          type: string
+          nullable: true
+          maxLength: 30
+        color:
+          type: string
+          nullable: true
+          maxLength: 20
+        birth:
+          type: string
+          format: date
+          nullable: true
+        chip:
+          type: boolean
+          nullable: true
+        tatoo:
+          type: string
+          maxLength: 20
+        date_tatoo:
+          type: string
+          format: date
+          nullable: true
+        passport:
+          type: string
+          format: uri
+          nullable: true
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+        weight:
+          type: number
+          format: double
+          nullable: true
+      required:
+      - id
+      - name
+      - sex
+    Playground:
+      type: object
+      description: Сериализатор записей площадок для выгула собак
+      properties:
+        town:
+          type: string
+          maxLength: 100
+        address:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+          maxLength: 200
+        photo:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - address
+      - town
+    Post:
+      type: object
+      description: Сериализатор записей постов
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+          maxLength: 300
+        data:
+          type: string
+          format: date-time
+          readOnly: true
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        author:
+          type: integer
+          readOnly: true
+      required:
+      - author
+      - data
+      - id
+    Question:
+      type: object
+      description: Сериализатор записей вопросов пользователей
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        head:
+          type: string
+          maxLength: 100
+        body:
+          type: string
+          maxLength: 500
+        data:
+          type: string
+          format: date-time
+          readOnly: true
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        author:
+          type: integer
+          readOnly: true
+      required:
+      - author
+      - body
+      - data
+      - head
+      - id
+    SexEnum:
+      enum:
+      - M
+      - F
+      type: string
+      description: |-
+        * `M` - Male
+        * `F` - Famale
+    Treatment:
+      type: object
+      description: Сериализатор записей о принимаемых лекарствах и обработках питомцев
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        pet:
+          type: integer
+        name:
+          type: string
+          maxLength: 150
+        data:
+          type: string
+          format: date
+        data_next:
+          type: string
+          format: date
+      required:
+      - data
+      - data_next
+      - id
+      - name
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

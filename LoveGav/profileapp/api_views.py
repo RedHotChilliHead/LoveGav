@@ -36,6 +36,7 @@ class UserDetailView(APIView):
     Create, update, delete и detail для конкретного пользователя
     """
     permission_classes = (IsOwnerOrStaffReadOnly,)
+
     def get(self, request, pk):
         user = User.objects.get(pk=pk)
         serializer = UserSerializer(user)

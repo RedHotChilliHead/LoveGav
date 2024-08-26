@@ -22,9 +22,9 @@ services:
     build:
       dockerfile: ./Dockerfile
     command: >
-      sh -c '/wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8080'
+      sh -c '/wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000'
     ports:
-      - "8000:8080"
+      - "8000:8000"
     volumes:
       - .:/LoveGav  # Монтирование проекта в контейнер
       - ./uploads:/lovegavapp/uploads  # Монтирование директории media на хосте в media в контейнере
@@ -36,5 +36,14 @@ services:
       - DATABASE_PORT=5432
     depends_on:
       - db
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./LoveGav_Project_API.yaml:/LoveGav_Project_API.yaml
+    environment:
+      SWAGGER_JSON: /LoveGav_Project_API.yaml
 volumes:
   db_data:

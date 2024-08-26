@@ -31,6 +31,7 @@ class UserPublicDetaislView(LoginRequiredMixin, DetailView):
         context['posts'] = posts
         return context
 
+
 class CreatePostView(LoginRequiredMixin, CreateView):
     """
     Представление для создания поста
@@ -46,6 +47,7 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy("blogapp:public-user-details", kwargs={'username': self.request.user.username})
+
 
 class PostUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     """
@@ -64,6 +66,7 @@ class PostUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("blogapp:detail-post", kwargs={'pk': self.object.pk, 'username': self.object.author.username})
 
+
 class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
     Представление для удаления поста
@@ -79,6 +82,7 @@ class PostDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("blogapp:public-user-details", kwargs={'username': self.object.author.username})
+
 
 class PostDetaislView(LoginRequiredMixin, View):
     """
@@ -114,6 +118,7 @@ class PostDetaislView(LoginRequiredMixin, View):
             }
             return render(request, 'blogapp/post_details.html', context=context)
 
+
 class CommentDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     """
     Представление для удаления комменатария к посту
@@ -131,6 +136,7 @@ class CommentDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
         comment = get_object_or_404(Comment, pk=self.kwargs['pk'])
         post = get_object_or_404(Post, pk=comment.post.pk)
         return reverse_lazy("blogapp:detail-post", kwargs={'pk': post.pk, 'username': post.author.username})
+
 
 class PostListView(ListView):
     """
